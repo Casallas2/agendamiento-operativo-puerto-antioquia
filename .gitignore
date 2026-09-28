@@ -1,0 +1,17 @@
+# Dependencias y compilados
+node_modules/
+.next/
+dist/
+out/
+build/
+coverage/
+*.tsbuildinfo
+
+# Variables de entorno: nunca se publican, solo los ejemplos
+.env*
+!.env.example
+
+# Registros y sistema
+*.log
+.DS_Store
+Thumbs.db

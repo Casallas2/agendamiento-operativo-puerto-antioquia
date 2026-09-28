@@ -1,0 +1,299 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Los tokens del tema apuntan a las variables que emite next/font, sin autorreferencias */
+  --font-sans: var(--font-source-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-lexend);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-lienzo-oscuro: var(--lienzo-oscuro);
+  --color-lienzo-oscuro-foreground: var(--lienzo-oscuro-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Paleta institucional: azul portuario + ámbar de alta visibilidad (R-01) */
+:root {
+  /* Lienzo gris muy suave para que las tarjetas blancas se despeguen sin necesitar sombra */
+  --background: oklch(0.974 0.004 250);
+  --foreground: oklch(0.17 0.02 255);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.17 0.02 255);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.17 0.02 255);
+  --primary: oklch(0.48 0.17 258);
+  --primary-foreground: oklch(0.985 0 0);
+  /* Naranja de entrega: reservado para acentos y datos, nunca para superficies hover */
+  --highlight: oklch(0.63 0.2 42);
+  --highlight-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.95 0.01 250);
+  --secondary-foreground: oklch(0.25 0.04 255);
+  --muted: oklch(0.955 0.006 250);
+  --muted-foreground: oklch(0.48 0.02 255);
+  --accent: oklch(0.94 0.02 250);
+  --accent-foreground: oklch(0.25 0.04 255);
+  --destructive: oklch(0.577 0.245 27.325);
+  --success: oklch(0.52 0.14 150);
+  --warning: oklch(0.72 0.16 70);
+  --info: oklch(0.55 0.15 245);
+  --border: oklch(0.91 0.01 250);
+  --input: oklch(0.88 0.01 250);
+  --ring: oklch(0.55 0.15 252);
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --radius: 0.625rem;
+
+  /*
+   * Navegación clara: la barra lateral es blanca como las tarjetas y se separa del lienzo
+   * con una línea de un píxel. El elemento activo es una píldora gris con texto casi negro,
+   * no un bloque de color: el color se reserva para los datos.
+   */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.44 0.015 255);
+  --sidebar-primary: oklch(0.955 0.005 250);
+  --sidebar-primary-foreground: oklch(0.21 0.025 255);
+  --sidebar-accent: oklch(0.972 0.004 250);
+  --sidebar-accent-foreground: oklch(0.26 0.025 255);
+  --sidebar-border: oklch(0.925 0.008 250);
+  --sidebar-ring: oklch(0.55 0.15 252);
+
+  /* Superficies oscuras: portada, panel de acceso y tarjeta de turno en cabina */
+  --lienzo-oscuro: oklch(0.23 0.05 255);
+  --lienzo-oscuro-foreground: oklch(0.97 0.01 250);
+}
+
+/* Modo noche: pensado para la cabina del tractocamión en jornadas nocturnas */
+.dark {
+  --background: oklch(0.16 0.015 255);
+  --foreground: oklch(0.97 0.005 250);
+  --card: oklch(0.21 0.02 255);
+  --card-foreground: oklch(0.97 0.005 250);
+  --popover: oklch(0.21 0.02 255);
+  --popover-foreground: oklch(0.97 0.005 250);
+  --primary: oklch(0.74 0.14 250);
+  --primary-foreground: oklch(0.16 0.03 255);
+  --highlight: oklch(0.72 0.17 48);
+  --highlight-foreground: oklch(0.16 0.03 255);
+  --secondary: oklch(0.28 0.025 255);
+  --secondary-foreground: oklch(0.97 0.005 250);
+  --muted: oklch(0.27 0.02 255);
+  --muted-foreground: oklch(0.74 0.015 250);
+  --accent: oklch(0.29 0.03 255);
+  --accent-foreground: oklch(0.97 0.005 250);
+  --destructive: oklch(0.704 0.191 22.216);
+  --success: oklch(0.72 0.15 150);
+  --warning: oklch(0.8 0.15 75);
+  --info: oklch(0.72 0.12 240);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.65 0.13 245);
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+  /* En modo noche la navegación es apenas más clara que el lienzo, igual que las tarjetas */
+  --sidebar: oklch(0.21 0.02 255);
+  --sidebar-foreground: oklch(0.76 0.015 250);
+  --sidebar-primary: oklch(0.28 0.025 255);
+  --sidebar-primary-foreground: oklch(0.98 0.005 250);
+  --sidebar-accent: oklch(0.26 0.022 255);
+  --sidebar-accent-foreground: oklch(0.97 0.005 250);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.65 0.13 245);
+
+  --lienzo-oscuro: oklch(0.21 0.02 255);
+  --lienzo-oscuro-foreground: oklch(0.97 0.005 250);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading tracking-tight;
+  }
+  /* El foco nunca se elimina: solo se hace más legible que el anillo por defecto */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Primitivas de movimiento
+   Duraciones cortas para respuestas a un clic y algo más largas para entradas de
+   contenido: el movimiento comunica de dónde viene cada cosa, no decora.
+   ───────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --ease-salida: cubic-bezier(0.4, 0, 1, 1);
+  --ease-entrada: cubic-bezier(0, 0, 0.2, 1);
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes aparecer-subiendo {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulso-suave {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Barra de progreso del carrusel: avanza de 0 a 100 % durante la pausa del slide */
+@keyframes avance-lineal {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Deriva lenta tipo Ken Burns para las fotografías del carrusel */
+@keyframes deriva-lenta {
+  from {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@utility animar-entrada {
+  animation: aparecer-subiendo 420ms var(--ease-suave) both;
+}
+
+@utility animar-aparecer {
+  animation: aparecer 300ms var(--ease-entrada) both;
+}
+
+@utility animar-latido {
+  animation: pulso-suave 1.6s ease-in-out infinite;
+}
+
+/**
+ * Escalona la entrada de una lista o rejilla: cada hijo entra 60 ms después del
+ * anterior, hasta el octavo, para que se lea el orden sin que la espera se note.
+ */
+@utility animar-lista {
+  & > * {
+    animation: aparecer-subiendo 420ms var(--ease-suave) both;
+  }
+  & > *:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  & > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  & > *:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  & > *:nth-child(4) {
+    animation-delay: 180ms;
+  }
+  & > *:nth-child(5) {
+    animation-delay: 240ms;
+  }
+  & > *:nth-child(6) {
+    animation-delay: 300ms;
+  }
+  & > *:nth-child(7) {
+    animation-delay: 360ms;
+  }
+  & > *:nth-child(n + 8) {
+    animation-delay: 420ms;
+  }
+}
+
+/**
+ * Guard global de accesibilidad (WCAG 2.3.3).
+ * Reason: quien pide menos movimiento ve el estado final de inmediato; no se
+ * desactiva la animación con `none` porque eso rompe los `animation-fill-mode: both`
+ * de los que depende la opacidad final.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

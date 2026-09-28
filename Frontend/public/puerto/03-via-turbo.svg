@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img" aria-label="Tractocamión de carga avanzando por la vía de acceso al puerto entre plataneras">
+  <defs>
+    <linearGradient id="cielo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#16407a"/>
+      <stop offset="40%" stop-color="#3f7cb8"/>
+      <stop offset="72%" stop-color="#93c0dd"/>
+      <stop offset="100%" stop-color="#dfeaf0"/>
+    </linearGradient>
+    <linearGradient id="asfalto" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4a505c"/>
+      <stop offset="100%" stop-color="#20242c"/>
+    </linearGradient>
+    <linearGradient id="viñeta" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050c1a" stop-opacity="0.52"/>
+      <stop offset="44%" stop-color="#050c1a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#050c1a" stop-opacity="0.76"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="1500" fill="url(#cielo)"/>
+
+  <g fill="#ffffff" opacity="0.45">
+    <ellipse cx="300" cy="280" rx="190" ry="44"/>
+    <ellipse cx="420" cy="262" rx="120" ry="34"/>
+    <ellipse cx="900" cy="400" rx="170" ry="36"/>
+  </g>
+
+  <!-- Serranía de Abibe al fondo -->
+  <path d="M0 720 L180 590 L340 690 L520 560 L700 680 L880 600 L1060 700 L1200 640 L1200 820 L0 820 Z" fill="#2c5a58" opacity="0.65"/>
+  <path d="M0 790 L200 700 L400 780 L620 690 L840 780 L1040 710 L1200 790 L1200 900 L0 900 Z" fill="#20463f" opacity="0.85"/>
+
+  <!-- Plataneras: hileras de banano a ambos lados -->
+  <g>
+    <g fill="#1f5c3a">
+      <path d="M40 1010 q60 -150 130 -170 q-20 90 -60 190 Z"/>
+      <path d="M150 1010 q-50 -160 10 -200 q50 80 50 200 Z"/>
+      <path d="M250 1010 q70 -140 150 -160 q-30 90 -80 180 Z"/>
+      <path d="M0 1010 q30 -120 90 -150 q-10 80 -40 160 Z"/>
+    </g>
+    <g fill="#27734a">
+      <path d="M90 1020 q-40 -130 20 -170 q40 70 40 180 Z"/>
+      <path d="M320 1020 q-60 -140 0 -180 q56 76 56 190 Z"/>
+    </g>
+    <g fill="#1f5c3a">
+      <path d="M1160 1010 q-60 -150 -130 -170 q20 90 60 190 Z"/>
+      <path d="M1050 1010 q50 -160 -10 -200 q-50 80 -50 200 Z"/>
+      <path d="M950 1010 q-70 -140 -150 -160 q30 90 80 180 Z"/>
+      <path d="M1200 1010 q-30 -120 -90 -150 q10 80 40 160 Z"/>
+    </g>
+    <g fill="#27734a">
+      <path d="M1110 1020 q40 -130 -20 -170 q-40 70 -40 180 Z"/>
+      <path d="M880 1020 q60 -140 0 -180 q-56 76 -56 190 Z"/>
+    </g>
+  </g>
+
+  <!-- Vía en perspectiva -->
+  <path d="M470 900 L730 900 L1080 1500 L120 1500 Z" fill="url(#asfalto)"/>
+  <path d="M470 900 L482 900 L200 1500 L120 1500 Z" fill="#e6e9ee" opacity="0.5"/>
+  <path d="M718 900 L730 900 L1080 1500 L1000 1500 Z" fill="#e6e9ee" opacity="0.5"/>
+  <g fill="#f0c24a" opacity="0.85">
+    <path d="M596 912 L604 912 L606 950 L594 950 Z"/>
+    <path d="M592 990 L608 990 L612 1046 L588 1046 Z"/>
+    <path d="M586 1094 L614 1094 L620 1170 L580 1170 Z"/>
+    <path d="M576 1230 L624 1230 L632 1330 L568 1330 Z"/>
+    <path d="M562 1400 L638 1400 L650 1500 L550 1500 Z"/>
+  </g>
+
+  <!-- Tractocamión visto de frente, acercándose -->
+  <g>
+    <!-- Remolque -->
+    <rect x="452" y="852" width="300" height="250" rx="8" fill="#e8ecf1"/>
+    <rect x="452" y="852" width="300" height="30" rx="8" fill="#ccd4de"/>
+    <rect x="470" y="900" width="264" height="180" rx="4" fill="#dbe2ea"/>
+    <g fill="#1d4f91" opacity="0.9">
+      <rect x="500" y="940" width="200" height="16" rx="8"/>
+      <rect x="530" y="972" width="140" height="10" rx="5"/>
+    </g>
+    <!-- Cabina -->
+    <rect x="474" y="1090" width="256" height="210" rx="14" fill="#1d4f91"/>
+    <rect x="474" y="1090" width="256" height="18" rx="9" fill="#2a66b4"/>
+    <!-- Parabrisas -->
+    <rect x="498" y="1118" width="208" height="86" rx="10" fill="#0e2340"/>
+    <rect x="506" y="1126" width="90" height="70" rx="6" fill="#40638d" opacity="0.65"/>
+    <!-- Parrilla -->
+    <g fill="#143a6d">
+      <rect x="520" y="1218" width="164" height="12" rx="6"/>
+      <rect x="520" y="1238" width="164" height="12" rx="6"/>
+    </g>
+    <!-- Faros encendidos -->
+    <circle cx="502" cy="1236" r="20" fill="#ffe9b0"/>
+    <circle cx="702" cy="1236" r="20" fill="#ffe9b0"/>
+    <circle cx="502" cy="1236" r="34" fill="#ffe9b0" opacity="0.28"/>
+    <circle cx="702" cy="1236" r="34" fill="#ffe9b0" opacity="0.28"/>
+    <!-- Parachoques y ruedas -->
+    <rect x="466" y="1264" width="272" height="30" rx="8" fill="#0f2a4f"/>
+    <rect x="484" y="1292" width="60" height="42" rx="10" fill="#14181e"/>
+    <rect x="660" y="1292" width="60" height="42" rx="10" fill="#14181e"/>
+    <!-- Espejos -->
+    <rect x="452" y="1112" width="20" height="46" rx="6" fill="#143a6d"/>
+    <rect x="732" y="1112" width="20" height="46" rx="6" fill="#143a6d"/>
+  </g>
+  <!-- Sombra bajo el vehículo -->
+  <ellipse cx="602" cy="1340" rx="190" ry="22" fill="#0a0f18" opacity="0.4"/>
+
+  <rect width="1200" height="1500" fill="url(#viñeta)"/>
+</svg>

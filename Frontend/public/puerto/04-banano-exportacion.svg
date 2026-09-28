@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" width="1200" height="1500" role="img" aria-label="Estibas de cajas de banano listas para exportación frente a un contenedor refrigerado">
+  <defs>
+    <linearGradient id="fondo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d2c4f"/>
+      <stop offset="52%" stop-color="#1d4f7d"/>
+      <stop offset="100%" stop-color="#3b7ba5"/>
+    </linearGradient>
+    <linearGradient id="reefer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e3e8ee"/>
+      <stop offset="55%" stop-color="#f4f7fa"/>
+      <stop offset="100%" stop-color="#cdd5df"/>
+    </linearGradient>
+    <linearGradient id="suelo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4c5563"/>
+      <stop offset="100%" stop-color="#1e232b"/>
+    </linearGradient>
+    <linearGradient id="viñeta" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050c1a" stop-opacity="0.5"/>
+      <stop offset="42%" stop-color="#050c1a" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#050c1a" stop-opacity="0.78"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="1500" fill="url(#fondo)"/>
+
+  <!-- Estructura de la bodega -->
+  <g stroke="#0c2340" stroke-width="10" opacity="0.5">
+    <line x1="100" y1="120" x2="100" y2="900"/>
+    <line x1="1100" y1="120" x2="1100" y2="900"/>
+    <line x1="60" y1="180" x2="1140" y2="180"/>
+    <line x1="60" y1="330" x2="1140" y2="330"/>
+  </g>
+  <g fill="#9fd0ea" opacity="0.18">
+    <rect x="180" y="220" width="180" height="90" rx="6"/>
+    <rect x="420" y="220" width="180" height="90" rx="6"/>
+    <rect x="660" y="220" width="180" height="90" rx="6"/>
+    <rect x="900" y="220" width="140" height="90" rx="6"/>
+  </g>
+
+  <!-- Contenedor refrigerado al fondo -->
+  <g>
+    <rect x="150" y="420" width="900" height="470" rx="10" fill="url(#reefer)"/>
+    <rect x="150" y="420" width="900" height="26" rx="10" fill="#b9c3cf"/>
+    <g stroke="#c3ccd7" stroke-width="5" opacity="0.9">
+      <line x1="210" y1="452" x2="210" y2="880"/><line x1="270" y1="452" x2="270" y2="880"/>
+      <line x1="330" y1="452" x2="330" y2="880"/><line x1="390" y1="452" x2="390" y2="880"/>
+      <line x1="450" y1="452" x2="450" y2="880"/><line x1="510" y1="452" x2="510" y2="880"/>
+      <line x1="810" y1="452" x2="810" y2="880"/><line x1="870" y1="452" x2="870" y2="880"/>
+      <line x1="930" y1="452" x2="930" y2="880"/><line x1="990" y1="452" x2="990" y2="880"/>
+    </g>
+    <!-- Unidad de frío -->
+    <rect x="560" y="470" width="220" height="200" rx="8" fill="#dbe2ea"/>
+    <rect x="580" y="490" width="180" height="86" rx="6" fill="#8fa3b8"/>
+    <g stroke="#69819a" stroke-width="5" opacity="0.8">
+      <line x1="590" y1="510" x2="750" y2="510"/><line x1="590" y1="534" x2="750" y2="534"/>
+      <line x1="590" y1="558" x2="750" y2="558"/>
+    </g>
+    <circle cx="670" cy="620" r="34" fill="#46617c"/>
+    <circle cx="670" cy="620" r="10" fill="#dbe2ea"/>
+    <g stroke="#dbe2ea" stroke-width="7" stroke-linecap="round">
+      <line x1="670" y1="620" x2="670" y2="592"/>
+      <line x1="670" y1="620" x2="695" y2="636"/>
+      <line x1="670" y1="620" x2="645" y2="636"/>
+    </g>
+    <rect x="596" y="690" width="148" height="34" rx="6" fill="#1d4f91"/>
+    <rect x="612" y="700" width="116" height="14" rx="7" fill="#9fc4ee" opacity="0.85"/>
+    <!-- Indicador de temperatura -->
+    <rect x="800" y="700" width="120" height="44" rx="8" fill="#0e2340"/>
+    <g fill="#5ce0a3">
+      <rect x="816" y="716" width="12" height="12" rx="2"/><rect x="836" y="716" width="12" height="12" rx="2"/>
+      <rect x="856" y="716" width="12" height="12" rx="2"/><rect x="876" y="716" width="8" height="12" rx="2"/>
+    </g>
+  </g>
+
+  <!-- Estibas de cajas de banano -->
+  <g>
+    <!-- estiba izquierda -->
+    <g>
+      <rect x="120" y="900" width="330" height="56" rx="4" fill="#f0c24a"/>
+      <rect x="120" y="900" width="330" height="10" fill="#f8d97a"/>
+      <rect x="120" y="958" width="330" height="56" rx="4" fill="#e8b23c"/>
+      <rect x="120" y="958" width="330" height="10" fill="#f3cb68"/>
+      <rect x="120" y="1016" width="330" height="56" rx="4" fill="#f0c24a"/>
+      <rect x="120" y="1016" width="330" height="10" fill="#f8d97a"/>
+      <rect x="120" y="1074" width="330" height="56" rx="4" fill="#e8b23c"/>
+      <rect x="120" y="1074" width="330" height="10" fill="#f3cb68"/>
+      <g fill="#1d4f91" opacity="0.85">
+        <rect x="215" y="918" width="140" height="18" rx="9"/>
+        <rect x="215" y="1034" width="140" height="18" rx="9"/>
+      </g>
+      <g fill="#2f8f6b" opacity="0.8">
+        <rect x="240" y="976" width="90" height="16" rx="8"/>
+        <rect x="240" y="1092" width="90" height="16" rx="8"/>
+      </g>
+      <!-- estiba de madera -->
+      <rect x="110" y="1130" width="350" height="16" rx="3" fill="#8a6234"/>
+      <rect x="110" y="1146" width="350" height="10" rx="3" fill="#6d4c27"/>
+      <g fill="#6d4c27"><rect x="130" y="1156" width="40" height="22"/><rect x="400" y="1156" width="40" height="22"/><rect x="265" y="1156" width="40" height="22"/></g>
+    </g>
+
+    <!-- estiba derecha -->
+    <g>
+      <rect x="700" y="940" width="330" height="56" rx="4" fill="#e8b23c"/>
+      <rect x="700" y="940" width="330" height="10" fill="#f3cb68"/>
+      <rect x="700" y="998" width="330" height="56" rx="4" fill="#f0c24a"/>
+      <rect x="700" y="998" width="330" height="10" fill="#f8d97a"/>
+      <rect x="700" y="1056" width="330" height="56" rx="4" fill="#e8b23c"/>
+      <rect x="700" y="1056" width="330" height="10" fill="#f3cb68"/>
+      <g fill="#1d4f91" opacity="0.85">
+        <rect x="795" y="1016" width="140" height="18" rx="9"/>
+      </g>
+      <g fill="#2f8f6b" opacity="0.8">
+        <rect x="820" y="958" width="90" height="16" rx="8"/>
+        <rect x="820" y="1074" width="90" height="16" rx="8"/>
+      </g>
+      <rect x="690" y="1112" width="350" height="16" rx="3" fill="#8a6234"/>
+      <rect x="690" y="1128" width="350" height="10" rx="3" fill="#6d4c27"/>
+      <g fill="#6d4c27"><rect x="710" y="1138" width="40" height="22"/><rect x="980" y="1138" width="40" height="22"/><rect x="845" y="1138" width="40" height="22"/></g>
+    </g>
+  </g>
+
+  <!-- Suelo -->
+  <rect x="0" y="1178" width="1200" height="322" fill="url(#suelo)"/>
+  <rect x="0" y="1178" width="1200" height="14" fill="#10151d" opacity="0.55"/>
+  <g stroke="#f0c24a" stroke-width="6" opacity="0.28" stroke-linecap="round">
+    <line x1="80" y1="1260" x2="480" y2="1260"/>
+    <line x1="620" y1="1260" x2="1120" y2="1260"/>
+    <line x1="140" y1="1380" x2="1060" y2="1380"/>
+  </g>
+  <ellipse cx="285" cy="1186" rx="200" ry="18" fill="#0a0f18" opacity="0.35"/>
+  <ellipse cx="865" cy="1170" rx="200" ry="18" fill="#0a0f18" opacity="0.35"/>
+
+  <rect width="1200" height="1500" fill="url(#viñeta)"/>
+</svg>
