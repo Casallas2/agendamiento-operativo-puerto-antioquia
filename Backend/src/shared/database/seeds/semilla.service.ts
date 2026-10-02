@@ -10,7 +10,7 @@ import { PuntoEspera } from 'src/modules/reportes/entities';
 import { EventoTurno, Franja, Turno, ValidacionTurno } from 'src/modules/turnos/entities';
 import { Usuario } from 'src/modules/users/entities';
 import { RegistroExterno } from 'src/modules/validacion/entities';
-import { CATALOGO_VALIDACIONES } from 'src/modules/validacion/catalogo-validaciones';
+import { validacionesAplicables } from 'src/modules/validacion/catalogo-validaciones';
 import {
   BL_OPERADOR, CONDUCTORES, construirHistorialEspera, EMPRESAS, enDias,
   MANIFIESTOS_DIAN, MUELLES, USUARIOS, VEHICULOS,
@@ -125,7 +125,7 @@ export class SemillaService {
   }
 
   /**
-   * Cada turno de ejemplo llega con sus cinco validaciones resueltas y su historial.
+   * Cada turno de ejemplo llega con sus validaciones resueltas y su historial.
    * Devuelve el mapa código → id para que las notificaciones puedan enlazar con su turno.
    */
   private async sembrarTurnos(
@@ -160,7 +160,7 @@ export class SemillaService {
 
       await gestor.save(
         ValidacionTurno,
-        CATALOGO_VALIDACIONES.map((definicion, orden) => {
+        validacionesAplicables(turno.cargaRefrigerada).map((definicion, orden) => {
           const rechazaEsta = esRechazado && definicion.tipo === 'MANIFIESTO_DIAN';
           return gestor.create(ValidacionTurno, {
             turnoId: turno.id,

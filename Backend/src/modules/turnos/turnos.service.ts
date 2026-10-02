@@ -8,7 +8,7 @@ import type { UsuarioSesion } from 'src/common/types/usuario-sesion.type';
 import { BusEventosService } from 'src/modules/eventos/bus-eventos.service';
 import { Conductor, Vehiculo } from 'src/modules/flota/entities';
 import { UsersService } from 'src/modules/users/users.service';
-import { CATALOGO_VALIDACIONES } from 'src/modules/validacion/catalogo-validaciones';
+import { validacionesAplicables } from 'src/modules/validacion/catalogo-validaciones';
 import { ValidacionDocumentalService } from 'src/modules/validacion/validacion-documental.service';
 import { ETIQUETAS_ESTADO_TURNO } from './estados-turno.constants';
 import type { CrearTurnoDto } from './dto';
@@ -119,7 +119,7 @@ export class TurnosService {
     }
   }
 
-  /** Crea el turno con sus cinco validaciones pendientes y el primer evento del historial */
+  /** Crea el turno con sus validaciones pendientes y el primer evento del historial */
   private async persistirTurno(
     gestor: EntityManager,
     payload: CrearTurnoDto,
@@ -151,7 +151,7 @@ export class TurnosService {
     const guardado = await gestor.save(turno);
 
     await gestor.save(
-      CATALOGO_VALIDACIONES.map((definicion, orden) =>
+      validacionesAplicables(guardado.cargaRefrigerada).map((definicion, orden) =>
         gestor.create(ValidacionTurno, {
           turnoId: guardado.id,
           tipo: definicion.tipo,
@@ -206,7 +206,7 @@ export class TurnosService {
       );
 
       if (ESTADOS_QUE_OCUPAN_CUPO.includes(turnoVisible.estado)) {
-        await liberarCupo(gestor, turno.franjaId);
+        await liberarCupo(gestor, turno.franjaId, turno.cargaRefrigerada);
       }
     });
 

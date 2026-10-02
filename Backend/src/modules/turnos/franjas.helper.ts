@@ -4,13 +4,23 @@ import { Franja } from './entities';
 /**
  * Libera un cupo de la franja sin bajar de cero.
  * Reason: se resuelve en SQL (`GREATEST`) y no leyendo-escribiendo en memoria, para que dos
- * cancelaciones simultáneas no se pisen el contador.
+ * cancelaciones simultáneas no se pisen el contador. Si el turno era de carga refrigerada,
+ * también devuelve su lugar en el contador de la cuota prioritaria (OCI-001).
  */
-export const liberarCupo = async (gestor: EntityManager, franjaId: string): Promise<void> => {
+export const liberarCupo = async (
+  gestor: EntityManager,
+  franjaId: string,
+  cargaRefrigerada = false,
+): Promise<void> => {
   await gestor
     .createQueryBuilder()
     .update(Franja)
-    .set({ ocupados: () => 'GREATEST("ocupados" - 1, 0)' })
+    .set({
+      ocupados: () => 'GREATEST("ocupados" - 1, 0)',
+      ...(cargaRefrigerada && {
+        ocupadosRefrigerados: () => 'GREATEST("ocupados_refrigerados" - 1, 0)',
+      }),
+    })
     .where('id = :franjaId', { franjaId })
     .execute();
 };
