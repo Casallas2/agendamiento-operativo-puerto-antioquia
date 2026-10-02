@@ -4,7 +4,7 @@ import { differenceInMinutes } from 'date-fns';
 import { AlertTriangle, CalendarX2, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Alert, AlertTitle } from '@/components/ui/alert';
-import { InsigniaEstadoTurno } from '@/components/shared/InsigniaEstado';
+import { InsigniaCargaRefrigerada, InsigniaEstadoTurno } from '@/components/shared/InsigniaEstado';
 import { formatearDiaRelativo, formatearHora } from '@/lib/formatos';
 import type { TurnoDetallado } from '@/modules/dashboard/turnos/types/turnos.types';
 
@@ -47,7 +47,10 @@ export const TarjetaTurnoActual = ({ turno }: { turno: TurnoDetallado | null }) 
           <p id="titulo-turno" className="text-sm text-muted-foreground">
             Tu turno <span className="font-mono text-foreground">{turno.codigo}</span>
           </p>
-          <InsigniaEstadoTurno estado={turno.estado} tamano="grande" />
+          <div className="flex flex-wrap items-center gap-2">
+            {turno.cargaRefrigerada && <InsigniaCargaRefrigerada tamano="grande" />}
+            <InsigniaEstadoTurno estado={turno.estado} tamano="grande" />
+          </div>
         </div>
 
         {/* La hora es el dato que el conductor lee de reojo: todo lo demás le cede espacio */}

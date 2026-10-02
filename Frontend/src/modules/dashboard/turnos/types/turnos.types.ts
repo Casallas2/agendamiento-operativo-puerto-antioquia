@@ -16,7 +16,9 @@ export type TipoValidacion =
   | 'BL_OPERADOR'
   | 'LICENCIA_RUNT'
   | 'SOAT'
-  | 'TECNOMECANICA';
+  | 'TECNOMECANICA'
+  /** Solo para carga refrigerada de exportación (OCI-001) */
+  | 'CERTIFICADO_ICA';
 
 export type EstadoValidacion = 'PENDIENTE' | 'EN_PROCESO' | 'APROBADA' | 'RECHAZADA';
 
@@ -41,6 +43,11 @@ export interface Franja {
   fin: string;
   capacidad: number;
   ocupados: number;
+  /** Cupos reservados para carga refrigerada (OCI-001) */
+  cupoPrioritario: number;
+  ocupadosRefrigerados: number;
+  /** Cupos que aún puede tomar cada tipo de carga */
+  disponibles: { general: number; refrigerada: number };
 }
 
 export interface Turno {
@@ -57,6 +64,8 @@ export interface Turno {
   tipoCarga: string;
   numeroManifiesto: string;
   numeroBl: string;
+  cargaRefrigerada: boolean;
+  numeroCertificadoIca?: string;
   estado: EstadoTurno;
   retrasoMinutos: number;
   motivoRechazo?: string;
@@ -81,6 +90,8 @@ export interface CrearTurnoPayload {
   tipoCarga: string;
   numeroManifiesto: string;
   numeroBl: string;
+  cargaRefrigerada: boolean;
+  numeroCertificadoIca?: string;
   franjaId: string;
   observaciones?: string;
 }

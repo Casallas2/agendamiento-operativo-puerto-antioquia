@@ -2,7 +2,7 @@
 
 import { addDays, format, startOfDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Wrench } from 'lucide-react';
+import { Snowflake, Wrench } from 'lucide-react';
 import { useAhora } from '@/hooks/useAhora';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,19 +20,31 @@ interface SelectorFranjaProps {
   fecha: string;
   franjaId: string;
   tipoCarga: string;
+  cargaRefrigerada: boolean;
   alCambiarFecha: (fecha: string) => void;
   alSeleccionarFranja: (franja: Franja) => void;
 }
 
-const describirCupos = (franja: Franja) => {
-  const libres = franja.capacidad - franja.ocupados;
+/** Cupos que puede tomar este tipo de carga: la general no ve la cuota refrigerada (OCI-001) */
+const contarCupos = (franja: Franja, cargaRefrigerada: boolean) =>
+  cargaRefrigerada ? franja.disponibles.refrigerada : franja.disponibles.general;
+
+const describirCupos = (franja: Franja, cargaRefrigerada: boolean) => {
+  const libres = contarCupos(franja, cargaRefrigerada);
   if (libres <= 0) {
-    return 'Lleno';
+    return franja.disponibles.refrigerada > 0 ? 'Solo refrigerada' : 'Lleno';
   }
   return libres === 1 ? '1 cupo' : `${libres} cupos`;
 };
 
-export const SelectorFranja = ({ fecha, franjaId, tipoCarga, alCambiarFecha, alSeleccionarFranja }: SelectorFranjaProps) => {
+export const SelectorFranja = ({
+  fecha,
+  franjaId,
+  tipoCarga,
+  cargaRefrigerada,
+  alCambiarFecha,
+  alSeleccionarFranja,
+}: SelectorFranjaProps) => {
   const { data: franjas = [], isLoading: cargandoFranjas } = useGetFranjas(fecha);
   const { data: muelles = [], isLoading: cargandoMuelles } = useGetMuelles();
   const ahora = useAhora();
@@ -60,6 +72,13 @@ export const SelectorFranja = ({ fecha, franjaId, tipoCarga, alCambiarFecha, alS
           );
         })}
       </div>
+
+      <p className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Snowflake className="size-4 text-info" aria-hidden />
+        {cargaRefrigerada
+          ? 'Tu carga refrigerada puede usar cualquier cupo libre, incluida la cuota prioritaria.'
+          : 'El 30 % de cada franja está reservado para carga refrigerada hasta 2 horas antes.'}
+      </p>
 
       {(cargandoFranjas || cargandoMuelles) && <Skeleton className="h-48 w-full" />}
 
@@ -89,7 +108,7 @@ export const SelectorFranja = ({ fecha, franjaId, tipoCarga, alCambiarFecha, alS
                 ) : (
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     {franjasMuelle.map((franja) => {
-                      const estaLlena = franja.ocupados >= franja.capacidad;
+                      const estaLlena = contarCupos(franja, cargaRefrigerada) <= 0;
                       const yaPaso = new Date(franja.inicio).getTime() < ahora;
                       const estaSeleccionada = franja.id === franjaId;
                       return (
@@ -104,7 +123,7 @@ export const SelectorFranja = ({ fecha, franjaId, tipoCarga, alCambiarFecha, alS
                         >
                           <span className="font-medium tabular-nums">{formatearHora(franja.inicio)}</span>
                           <span className={cn('text-xs font-normal', estaSeleccionada ? 'opacity-90' : 'text-muted-foreground')}>
-                            {yaPaso ? 'Ya pasó' : describirCupos(franja)}
+                            {yaPaso ? 'Ya pasó' : describirCupos(franja, cargaRefrigerada)}
                           </span>
                         </Button>
                       );

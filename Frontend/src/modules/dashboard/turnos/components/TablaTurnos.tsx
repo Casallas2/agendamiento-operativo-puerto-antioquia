@@ -4,7 +4,7 @@ import { AlertTriangle, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { EnlaceBoton } from '@/components/shared/EnlaceBoton';
-import { InsigniaEstadoTurno } from '@/components/shared/InsigniaEstado';
+import { InsigniaCargaRefrigerada, InsigniaEstadoTurno } from '@/components/shared/InsigniaEstado';
 import { formatearDiaRelativo, formatearVentana } from '@/lib/formatos';
 import type { TurnoDetallado } from '../types/turnos.types';
 import { MenuAccionesTurno } from './MenuAccionesTurno';
@@ -58,7 +58,10 @@ export const TablaTurnos = ({ turnos, puedeCancelar, mostrarEmpresa, alCancelar 
               </TableCell>
               <TableCell>{turno.nombreMuelle}</TableCell>
               <TableCell>
-                <InsigniaEstadoTurno estado={turno.estado} />
+                <div className="flex flex-col items-start gap-1">
+                  <InsigniaEstadoTurno estado={turno.estado} />
+                  {turno.cargaRefrigerada && <InsigniaCargaRefrigerada />}
+                </div>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">
@@ -84,6 +87,7 @@ export const TablaTurnos = ({ turnos, puedeCancelar, mostrarEmpresa, alCancelar 
                 <InsigniaEstadoTurno estado={turno.estado} />
               </div>
               <VentanaTurno turno={turno} />
+              {turno.cargaRefrigerada && <InsigniaCargaRefrigerada />}
               <p className="text-xs text-muted-foreground">
                 {turno.placa} · {turno.nombreConductor} · {turno.nombreMuelle}
               </p>
