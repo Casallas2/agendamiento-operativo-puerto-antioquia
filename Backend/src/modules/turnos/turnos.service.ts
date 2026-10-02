@@ -10,6 +10,7 @@ import { Conductor, Vehiculo } from 'src/modules/flota/entities';
 import { UsersService } from 'src/modules/users/users.service';
 import { validacionesAplicables } from 'src/modules/validacion/catalogo-validaciones';
 import { ValidacionDocumentalService } from 'src/modules/validacion/validacion-documental.service';
+import { calcularDisponibilidad } from './cupo-prioritario';
 import { ETIQUETAS_ESTADO_TURNO } from './estados-turno.constants';
 import type { CrearTurnoDto } from './dto';
 import { EventoTurno, Franja, Turno, ValidacionTurno } from './entities';
@@ -43,6 +44,7 @@ export class TurnosService {
       throw new ForbiddenException('Solo los transportistas pueden reservar turnos');
     }
     const empresaId = usuario.empresaId;
+    const cargaRefrigerada = payload.cargaRefrigerada === true;
 
     const turnoId = await this.dataSource.transaction(async (gestor) => {
       const franja = await gestor.findOne(Franja, {
@@ -60,8 +62,8 @@ export class TurnosService {
       await this.verificarVehiculoLibre(gestor, payload.vehiculoId, franja.id);
 
       // La base de datos arbitra la carrera por el último cupo
-      if (!(await tomarCupo(gestor, franja.id))) {
-        throw new ConflictException('Otro transportista tomó el último cupo de esta franja. Elige otra.');
+      if (!(await tomarCupo(gestor, franja.id, cargaRefrigerada))) {
+        throw new ConflictException(this.explicarFranjaSinCupo(franja, cargaRefrigerada));
       }
 
       return this.persistirTurno(gestor, payload, empresaId, franja);
@@ -73,7 +75,9 @@ export class TurnosService {
     await this.busEventos.publicar({
       tipo: 'TurnoSolicitado',
       titulo: `Nuevo turno ${turno.codigo}`,
-      descripcion: 'Se reservó un cupo y la documentación está en validación.',
+      descripcion: turno.cargaRefrigerada
+        ? 'Carga refrigerada con prioridad: se reservó un cupo y la documentación está en validación.'
+        : 'Se reservó un cupo y la documentación está en validación.',
       severidad: 'INFO',
       usuariosAfectados: destinatarios.filter((usuarioId) => usuarioId !== usuario.id),
       turnoId: turno.id,
@@ -84,6 +88,18 @@ export class TurnosService {
     this.logger.log(`Turno ${turno.codigo} solicitado por ${usuario.correo}`);
 
     return construirRespuesta(202, 'Solicitud de turno recibida', turno);
+  }
+
+  /**
+   * Explica por qué no hubo cupo. Si la franja aún tiene lugar pero solo en la cuota
+   * prioritaria, el transportista de carga general debe saberlo para elegir otra (OCI-001).
+   */
+  private explicarFranjaSinCupo(franja: Franja, cargaRefrigerada: boolean): string {
+    const disponibles = calcularDisponibilidad(franja);
+    if (!cargaRefrigerada && disponibles.refrigerada > 0) {
+      return 'Los cupos que quedan en esta franja están reservados para carga refrigerada. Elige otra.';
+    }
+    return 'Otro transportista tomó el último cupo de esta franja. Elige otra.';
   }
 
   /** El vehículo y el conductor tienen que pertenecer a la empresa que reserva */
@@ -144,6 +160,8 @@ export class TurnosService {
       tipoCarga: payload.tipoCarga,
       numeroManifiesto: payload.numeroManifiesto,
       numeroBl: payload.numeroBl,
+      cargaRefrigerada: payload.cargaRefrigerada === true,
+      numeroCertificadoIca: payload.cargaRefrigerada ? (payload.numeroCertificadoIca ?? null) : null,
       estado: 'PENDIENTE_VALIDACION',
       retrasoMinutos: 0,
       observaciones: payload.observaciones || null,

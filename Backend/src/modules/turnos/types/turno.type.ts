@@ -27,6 +27,11 @@ export type FranjaData = {
   fin: string;
   capacidad: number;
   ocupados: number;
+  /** Cupos reservados para carga refrigerada (OCI-001) */
+  cupoPrioritario: number;
+  ocupadosRefrigerados: number;
+  /** Cupos que aún puede tomar cada tipo de carga en este momento */
+  disponibles: { general: number; refrigerada: number };
 };
 
 /** Espejo de `Turno` en el frontend */
@@ -44,6 +49,8 @@ export type TurnoData = {
   tipoCarga: string;
   numeroManifiesto: string;
   numeroBl: string;
+  cargaRefrigerada: boolean;
+  numeroCertificadoIca?: string;
   estado: EstadoTurno;
   retrasoMinutos: number;
   motivoRechazo?: string;

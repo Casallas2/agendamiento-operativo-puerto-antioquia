@@ -1,4 +1,5 @@
 import { aIso } from 'src/common/types/respuesta-api.type';
+import { calcularDisponibilidad } from './cupo-prioritario';
 import { CATALOGO_VALIDACIONES } from 'src/modules/validacion/catalogo-validaciones';
 import type { EventoTurno, Franja, Turno, ValidacionTurno } from './entities';
 import type {
@@ -31,6 +32,9 @@ export const mapearFranja = (franja: Franja): FranjaData => ({
   fin: aIso(franja.fin),
   capacidad: franja.capacidad,
   ocupados: franja.ocupados,
+  cupoPrioritario: franja.cupoPrioritario,
+  ocupadosRefrigerados: franja.ocupadosRefrigerados,
+  disponibles: calcularDisponibilidad(franja),
 });
 
 export const mapearTurno = (turno: Turno): TurnoData => ({
@@ -47,6 +51,8 @@ export const mapearTurno = (turno: Turno): TurnoData => ({
   tipoCarga: turno.tipoCarga,
   numeroManifiesto: turno.numeroManifiesto,
   numeroBl: turno.numeroBl,
+  cargaRefrigerada: turno.cargaRefrigerada,
+  numeroCertificadoIca: turno.numeroCertificadoIca ?? undefined,
   estado: turno.estado,
   retrasoMinutos: turno.retrasoMinutos,
   motivoRechazo: turno.motivoRechazo ?? undefined,

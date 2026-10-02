@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
-  IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, Matches, MaxLength,
+  IsBoolean, IsIn, IsNotEmpty, IsOptional, IsString, IsUUID, Matches, MaxLength, ValidateIf,
 } from 'class-validator';
 import { TIPOS_OPERACION, type TipoOperacion } from 'src/common/types/dominio.type';
 
@@ -42,6 +42,26 @@ export class CrearTurnoDto {
   @Transform(recortarEnMayusculas)
   @Matches(/^BL-[A-Z]{2}-\d{5}$/, { message: 'El BL debe tener el formato BL-XX-NNNNN' })
   numeroBl: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    default: false,
+    description: 'Contenedor refrigerado (banano): usa la cuota prioritaria de la franja (OCI-001)',
+  })
+  @IsOptional()
+  @IsBoolean({ message: 'La carga refrigerada debe indicarse como verdadero o falso' })
+  cargaRefrigerada?: boolean;
+
+  @ApiPropertyOptional({
+    example: 'CFE-2026-001204',
+    description: 'Certificado fitosanitario de exportación del ICA. Obligatorio si la carga es refrigerada',
+  })
+  @ValidateIf((turno: CrearTurnoDto) => turno.cargaRefrigerada === true)
+  @Transform(recortarEnMayusculas)
+  @Matches(/^CFE-\d{4}-\d{6}$/, {
+    message: 'El certificado fitosanitario debe tener el formato CFE-AAAA-NNNNNN',
+  })
+  numeroCertificadoIca?: string;
 
   @ApiProperty({ example: 'uuid-here', description: 'Franja horaria que se quiere reservar' })
   @IsUUID('4', { message: 'La franja seleccionada no es válida' })
