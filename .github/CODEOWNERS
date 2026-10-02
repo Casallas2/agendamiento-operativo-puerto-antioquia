@@ -1,0 +1,9 @@
+# Dueños de los elementos de configuración (ECS). GitHub pide su revisión en cada Pull Request.
+*                                         @Casallas2
+
+# Elementos críticos: esquema de datos, vocabulario de dominio, contratos externos e infraestructura
+/Backend/src/shared/database/migrations/  @Casallas2
+/Backend/src/common/types/                @Casallas2
+/Backend/src/modules/validacion/adaptadores/ @Casallas2
+/infra/                                   @Casallas2
+/.github/                                 @Casallas2
