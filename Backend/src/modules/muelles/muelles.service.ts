@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, LessThanOrEqual, MoreThanOrEqual, Repository, type EntityManager } from 'typeorm';
 import { construirRespuesta } from 'src/common/types/respuesta-api.type';
 import { BusEventosService } from 'src/modules/eventos/bus-eventos.service';
+import { calcularRetrasoAplicable } from 'src/modules/turnos/cupo-prioritario';
 import { EventoTurno, Turno } from 'src/modules/turnos/entities';
 import { UsersService } from 'src/modules/users/users.service';
 import type { DeclararRetrasoDto } from './dto';
@@ -62,7 +63,10 @@ export class MuellesService {
     await gestor.save(eventos);
   }
 
-  /** Evento MuelleRetrasado: desplaza la ventana de los turnos próximos y avisa a cada afectado */
+  /**
+   * Evento MuelleRetrasado: desplaza la ventana de los turnos próximos y avisa a cada afectado.
+   * OCI-001: la carga refrigerada se atiende primero, así que su desplazamiento tiene tope.
+   */
   async declararRetraso(muelleId: string, payload: DeclararRetrasoDto): Promise<TurnosNotificadosResponse> {
     const { muelle, turnosAfectados } = await this.dataSource.transaction(async (gestor) => {
       const muelleGuardado = await gestor.findOne(Muelle, { where: { id: muelleId } });
@@ -76,17 +80,23 @@ export class MuellesService {
       await gestor.save(muelleGuardado);
 
       const afectados = await this.obtenerTurnosAfectados(gestor, muelleId);
-      if (afectados.length > 0) {
-        await gestor.update(
-          Turno,
-          { id: In(afectados.map((turno) => turno.id)) },
-          { retrasoMinutos: payload.minutos },
-        );
+      for (const cargaRefrigerada of [false, true]) {
+        const grupo = afectados.filter((turno) => turno.cargaRefrigerada === cargaRefrigerada);
+        if (grupo.length === 0) {
+          continue;
+        }
+        const minutos = calcularRetrasoAplicable(payload.minutos, cargaRefrigerada);
+        await gestor.update(Turno, { id: In(grupo.map((turno) => turno.id)) }, { retrasoMinutos: minutos });
+        grupo.forEach((turno) => {
+          turno.retrasoMinutos = minutos;
+        });
         await this.registrarEnHistorial(
           gestor,
-          afectados,
+          grupo,
           'MuelleRetrasado',
-          `Ventana desplazada ${payload.minutos} min: ${payload.motivo}`,
+          cargaRefrigerada
+            ? `Ventana desplazada ${minutos} min (prioridad por cadena de frío): ${payload.motivo}`
+            : `Ventana desplazada ${minutos} min: ${payload.motivo}`,
         );
       }
 
@@ -121,9 +131,10 @@ export class MuellesService {
       const destinatarios = await this.usersService.obtenerInteresadosEnTurno(turno, false);
       await this.busEventos.publicar({
         tipo: 'MuelleRetrasado',
-        titulo: `Retraso de ${payload.minutos} min en ${muelle.nombre}`,
+        titulo: `Retraso de ${turno.retrasoMinutos} min en ${muelle.nombre}`,
         descripcion:
-          `Tu turno ${turno.codigo} se desplaza ${payload.minutos} minutos. ` +
+          `Tu turno ${turno.codigo} se desplaza ${turno.retrasoMinutos} minutos. ` +
+          (turno.cargaRefrigerada ? 'Tu carga refrigerada tiene prioridad de atención. ' : '') +
           `Motivo: ${payload.motivo}. No te acerques antes de la nueva hora.`,
         severidad: 'ALERTA',
         usuariosAfectados: destinatarios,
