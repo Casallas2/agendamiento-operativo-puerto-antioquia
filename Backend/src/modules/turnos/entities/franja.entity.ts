@@ -31,6 +31,14 @@ export class Franja {
   @Column({ type: 'int', default: 0 })
   ocupados: number;
 
+  /** Cupos reservados para carga refrigerada (OCI-001); la carga general no puede tomarlos */
+  @Column({ type: 'int', default: 0, name: 'cupo_prioritario' })
+  cupoPrioritario: number;
+
+  /** Cuántos de los `ocupados` corresponden a carga refrigerada */
+  @Column({ type: 'int', default: 0, name: 'ocupados_refrigerados' })
+  ocupadosRefrigerados: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 
