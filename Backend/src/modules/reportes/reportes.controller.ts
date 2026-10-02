@@ -33,6 +33,8 @@ export class ReportesController {
             muellesConNovedad: 1,
             esperaPromedioMinutos: 84,
             reduccionEsperaPorcentaje: 73,
+            turnosRefrigeradosHoy: 4,
+            usoCuotaPrioritaria: 58,
           },
           ocupacionPorFranja: [{ franja: '06:00', ocupados: 9, capacidad: 23 }],
           rechazosPorMotivo: [{ motivo: 'Manifiesto de carga', cantidad: 1 }],
