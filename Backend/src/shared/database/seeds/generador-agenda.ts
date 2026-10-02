@@ -1,5 +1,6 @@
 import { addDays, addHours, startOfDay, subDays } from 'date-fns';
 import type { EstadoTurno } from 'src/common/types/dominio.type';
+import { calcularCupoPrioritario } from 'src/modules/turnos/cupo-prioritario';
 import { ID, MUELLES } from './datos-maestros';
 
 const HORAS_INICIO_FRANJA = [6, 8, 10, 12, 14, 16, 18, 20];
@@ -13,6 +14,8 @@ export type FranjaSemilla = {
   fin: Date;
   capacidad: number;
   ocupados: number;
+  cupoPrioritario: number;
+  ocupadosRefrigerados: number;
 };
 
 export type TurnoSemilla = {
@@ -25,6 +28,8 @@ export type TurnoSemilla = {
   tipoCarga: string;
   numeroManifiesto: string;
   numeroBl: string;
+  cargaRefrigerada: boolean;
+  numeroCertificadoIca?: string;
   creadoEn: Date;
   motivoRechazo?: string;
 };
@@ -53,18 +58,22 @@ export const generarFranjas = (ahora: Date): FranjaSemilla[] => {
     MUELLES.forEach((muelle, indiceMuelle) => {
       HORAS_INICIO_FRANJA.forEach((hora, indiceHora) => {
         const inicio = addHours(dia, hora);
+        const cupoPrioritario = calcularCupoPrioritario(muelle.capacidadPorFranja);
         franjas.push({
           id: crypto.randomUUID(),
           muelleId: muelle.id,
           inicio,
           fin: addHours(inicio, HORAS_POR_FRANJA),
           capacidad: muelle.capacidadPorFranja,
+          // La ocupación base es de carga general: nunca invade la cuota prioritaria
           ocupados: calcularOcupacionBase(
             indiceDia,
             indiceHora,
             indiceMuelle,
-            muelle.capacidadPorFranja - 1,
+            Math.min(muelle.capacidadPorFranja - 1, muelle.capacidadPorFranja - cupoPrioritario),
           ),
+          cupoPrioritario,
+          ocupadosRefrigerados: 0,
         });
       });
     });
@@ -98,18 +107,21 @@ export const generarTurnos = (ahora: Date, franjas: FranjaSemilla[]): TurnoSemil
   const turnos: TurnoSemilla[] = [
     {
       codigo: 'TRN-1001', empresaId: ID.empresaUraba, vehiculoId: ID.vehiculo1, conductorId: ID.conductor1,
+      cargaRefrigerada: true, numeroCertificadoIca: 'CFE-2026-001204',
       franja: buscarFranja(franjas, ID.muelle2, ahora, 0), estado: 'CONFIRMADO',
       tipoCarga: 'Banano refrigerado', numeroManifiesto: 'MAN-2026-004512', numeroBl: 'BL-PA-88213',
       creadoEn: subDays(ahora, 1),
     },
     {
       codigo: 'TRN-1002', empresaId: ID.empresaUraba, vehiculoId: ID.vehiculo2, conductorId: ID.conductor2,
+      cargaRefrigerada: false,
       franja: buscarFranja(franjas, ID.muelle1, addHours(hoy, 8), 1), estado: 'CONFIRMADO',
       tipoCarga: 'Contenedor seco 40 pies', numeroManifiesto: 'MAN-2026-004530', numeroBl: 'BL-PA-88240',
       creadoEn: subDays(ahora, 1),
     },
     {
       codigo: 'TRN-1003', empresaId: ID.empresaUraba, vehiculoId: ID.vehiculo2, conductorId: ID.conductor2,
+      cargaRefrigerada: false,
       franja: buscarFranja(franjas, ID.muelle3, addHours(hoy, 10), 1), estado: 'RECHAZADO',
       tipoCarga: 'Carga general', numeroManifiesto: 'MAN-2026-009999', numeroBl: 'BL-PA-88251',
       creadoEn: subDays(ahora, 1),
@@ -117,18 +129,21 @@ export const generarTurnos = (ahora: Date, franjas: FranjaSemilla[]): TurnoSemil
     },
     {
       codigo: 'TRN-1004', empresaId: ID.empresaGolfo, vehiculoId: ID.vehiculo4, conductorId: ID.conductor4,
+      cargaRefrigerada: false,
       franja: buscarFranja(franjas, ID.muelle1, ahora, 0), estado: 'EN_CAMINO',
       tipoCarga: 'Contenedor seco 20 pies', numeroManifiesto: 'MAN-2026-004498', numeroBl: 'BL-PA-88199',
       creadoEn: subDays(ahora, 2),
     },
     {
       codigo: 'TRN-1005', empresaId: ID.empresaGolfo, vehiculoId: ID.vehiculo5, conductorId: ID.conductor5,
+      cargaRefrigerada: true, numeroCertificadoIca: 'CFE-2026-001190',
       franja: buscarFranja(franjas, ID.muelle2, addHours(hoy, 6), 0), estado: 'COMPLETADO',
       tipoCarga: 'Banano refrigerado', numeroManifiesto: 'MAN-2026-004470', numeroBl: 'BL-PA-88170',
       creadoEn: subDays(ahora, 2),
     },
     {
       codigo: 'TRN-1006', empresaId: ID.empresaUraba, vehiculoId: ID.vehiculo1, conductorId: ID.conductor1,
+      cargaRefrigerada: true, numeroCertificadoIca: 'CFE-2026-001215',
       franja: buscarFranja(franjas, ID.muelle2, addHours(hoy, 14), 2), estado: 'CONFIRMADO',
       tipoCarga: 'Banano refrigerado', numeroManifiesto: 'MAN-2026-004545', numeroBl: 'BL-PA-88260',
       creadoEn: ahora,
@@ -139,6 +154,9 @@ export const generarTurnos = (ahora: Date, franjas: FranjaSemilla[]): TurnoSemil
   turnos.forEach((turno) => {
     if (turno.estado !== 'RECHAZADO') {
       turno.franja.ocupados = Math.min(turno.franja.ocupados + 1, turno.franja.capacidad);
+      if (turno.cargaRefrigerada) {
+        turno.franja.ocupadosRefrigerados += 1;
+      }
     }
   });
 

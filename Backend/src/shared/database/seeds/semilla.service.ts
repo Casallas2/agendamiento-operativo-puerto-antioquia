@@ -12,7 +12,7 @@ import { Usuario } from 'src/modules/users/entities';
 import { RegistroExterno } from 'src/modules/validacion/entities';
 import { validacionesAplicables } from 'src/modules/validacion/catalogo-validaciones';
 import {
-  BL_OPERADOR, CONDUCTORES, construirHistorialEspera, EMPRESAS, enDias,
+  BL_OPERADOR, CERTIFICADOS_ICA, CONDUCTORES, construirHistorialEspera, EMPRESAS, enDias,
   MANIFIESTOS_DIAN, MUELLES, USUARIOS, VEHICULOS,
 } from './datos-maestros';
 import { generarFranjas, generarTurnos, SIGUIENTE_CODIGO_TURNO, type TurnoSemilla } from './generador-agenda';
@@ -104,6 +104,7 @@ export class SemillaService {
       ...BL_OPERADOR.map((numero) =>
         gestor.create(RegistroExterno, { sistema: 'OPERADOR_PORTUARIO' as const, numero }),
       ),
+      ...CERTIFICADOS_ICA.map((numero) => gestor.create(RegistroExterno, { sistema: 'ICA' as const, numero })),
     ]);
 
     await gestor.save(
@@ -151,6 +152,8 @@ export class SemillaService {
           tipoCarga: semilla.tipoCarga,
           numeroManifiesto: semilla.numeroManifiesto,
           numeroBl: semilla.numeroBl,
+          cargaRefrigerada: semilla.cargaRefrigerada,
+          numeroCertificadoIca: semilla.numeroCertificadoIca ?? null,
           estado: semilla.estado,
           retrasoMinutos: 0,
           motivoRechazo: semilla.motivoRechazo ?? null,
