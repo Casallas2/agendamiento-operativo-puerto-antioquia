@@ -95,7 +95,7 @@ git branch -a
 
 - `v1.0.0` sobre el commit inicial de `main` = **línea base de producto**.
 - `develop` con 6 commits de configuración GCS (`docs(gcs)`, `chore(gcs)`, `ci`, `chore(infra)`).
-- `feature/OCI-001-carga-refrigerada-ica` con 11 commits que siguen **Conventional Commits** y
+- `feature/OCI-001-carga-refrigerada-ica` con 12 commits que siguen **Conventional Commits** y
   citan `[OCI-001]`.
 
 **Decir:** «Uso SemVer. La OCI añade funcionalidad compatible, por eso sube la versión MENOR:
@@ -129,7 +129,7 @@ por un Pull Request revisado. Así se controlan las copias y los colaboradores.�
 **Recorrer:**
 
 1. *Conversation:* la plantilla de OCI diligenciada y `Closes #1` (traza Issue ↔ PR).
-2. *Commits:* los 11 commits convencionales.
+2. *Commits:* los 12 commits convencionales.
 3. *Files changed:* señalar `ica.adapter.ts` (nuevo adaptador) y la migración `CargaRefrigeradaIca`.
 4. *Checks:* los dos trabajos de GitHub Actions en verde.
 5. *Reviewers:* `CODEOWNERS` pidió la revisión del Líder de Configuración.

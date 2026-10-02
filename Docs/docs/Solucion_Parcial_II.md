@@ -93,7 +93,7 @@ El catálogo vivo está en el `README.md` del repositorio.
    Issue #1 (SC-001)        sección B.2              revisión del PR             │
                                                                                  ▼
  Informe de estado ◄── Auditoría FCA/PCA ◄── Pull Request → develop ◄── feature/OCI-001-carga-refrigerada-ica
-   sección D.2            plantilla del PR       (abierto)               11 commits convencionales
+   sección D.2            plantilla del PR       (abierto)               12 commits convencionales
                                                      │
                                                      ▼  (tras aprobación)
                                     release/1.1.0 ──► main + etiqueta v1.1.0
@@ -144,7 +144,7 @@ Requerimiento nuevo: **RF-17 Prioridad de carga perecedera**; amplía RF-02 y la
 | ECS-DAT-03 | Semilla | Turnos refrigerados y certificados ICA de ejemplo | Bajo |
 | ECS-DOC-02/04 | Documentación | RF-17; documentos 00, 02, 04, 05 y 09 | Bajo |
 
-Resultado medido: **49 archivos** modificados o nuevos sobre `develop`, de ellos 40 de código y pruebas (`git diff --stat develop..feature/OCI-001-carga-refrigerada-ica`).
+Resultado medido: **50 archivos** modificados o nuevos sobre `develop`, de ellos 40 de código y pruebas (`git diff --stat develop..feature/OCI-001-carga-refrigerada-ica`).
 
 #### Esfuerzo técnico
 
@@ -232,6 +232,7 @@ enlazado con `Closes #1`; la etiqueta `aprobada-ACC` del Issue registra la decis
 Historial real de la OCI (`git log --oneline develop..feature/OCI-001-carga-refrigerada-ica`):
 
 ```
+docs(estado): estado del proyecto tras la OCI-001
 docs(gcs): solución del Parcial II y guion de demostración [OCI-001]
 docs(changelog): entrada de la versión 1.1.0 [OCI-001]
 docs(oci-001): RF-17 y documentación técnica de turnos, validación, datos y API
@@ -328,7 +329,7 @@ Proyecto: Agendamiento Operativo Puerto Antioquia        Fecha de emisión: 2026
    - ECS nuevos:      ECS-DAT-08 (ica.adapter.ts), migración CargaRefrigeradaIca,
                       cupo-prioritario.ts, 2 archivos de pruebas
    - ECS modificados: ECS-PRG-02, 04, 05, 07, 08, 09, 10, 11 · ECS-DAT-01, 02, 03, 07 · ECS-DOC-02, 04
-   - Commits:         11 en feature/OCI-001-carga-refrigerada-ica (ver C.1)
+   - Commits:         12 en feature/OCI-001-carga-refrigerada-ica (ver C.1)
 
 2. ¿QUIÉN LO HIZO?
    - Solicitó:   Gremio exportador bananero, vía Gerencia de Operaciones   (Issue #1)
