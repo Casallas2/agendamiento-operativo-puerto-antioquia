@@ -13,6 +13,7 @@ Implementa RF-02: la validación documental previa al arribo. Es el módulo dond
 | `adaptadores/validador-externo.interface.ts` | Contrato `ValidadorExterno` común |
 | `adaptadores/dian.adapter.ts` | Traduce a SOAP/XML |
 | `adaptadores/operador-portuario.adapter.ts` | Traduce a REST/JSON |
+| `adaptadores/ica.adapter.ts` | Certificado fitosanitario del ICA, REST/JSON (OCI-001) |
 | `catalogo-validaciones.ts` | Las cinco validaciones y su sistema de origen |
 | `entities/registro-externo.entity.ts` | Espejo local de los registros externos |
 
@@ -58,7 +59,7 @@ que el servicio de validación nunca ve el vocabulario del sistema externo.
 Los métodos que no le corresponden a un adaptador devuelven aprobado con una explicación:
 «La DIAN no valida conductores». Así el contrato se cumple sin condicionales en el orquestador.
 
-## Las cinco validaciones
+## Las validaciones
 
 | Tipo | Etiqueta | Sistema | Latencia simulada |
 |---|---|---|---|
@@ -67,6 +68,12 @@ Los métodos que no le corresponden a un adaptador devuelven aprobado con una ex
 | `LICENCIA_RUNT` | Licencia de conducción | RUNT vía operador | 1700 ms |
 | `SOAT` | SOAT del vehículo | RUNT vía operador | 2100 ms |
 | `TECNOMECANICA` | Revisión técnico-mecánica | RUNT vía operador | 2500 ms |
+| `CERTIFICADO_ICA` | Certificado fitosanitario | ICA · REST | 1800 ms · **solo carga refrigerada** |
+
+La sexta validación llegó con la OCI-001 y demuestra la promesa del patrón Adapter: el
+servicio de validación solo agregó una consulta condicional; el protocolo del ICA (con campos
+propios como `phyto_status`) quedó encerrado en `AdaptadorIca`. `validacionesAplicables()` decide
+qué validaciones corresponden a cada turno.
 
 Las latencias son deliberadas: los sistemas reales son lentos, y es justo esa lentitud la que
 justifica que el `POST` responda 202 en lugar de esperar.

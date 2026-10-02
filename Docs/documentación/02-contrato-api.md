@@ -63,13 +63,17 @@ El canal SSE no puede enviar cabeceras, así que usa `?area=PORTAL`.
 | GET | `/bookings?estado=&busqueda=` | autenticado | `200` · turnos visibles según el rol |
 | GET | `/bookings/:id` | autenticado | `200` · detalle |
 | POST | `/bookings` | transportista | **`202`** · cupo reservado, validación en curso |
+
+Desde la OCI-001 el cuerpo acepta `cargaRefrigerada` (boolean) y `numeroCertificadoIca`
+(`CFE-AAAA-NNNNNN`, obligatorio si la carga es refrigerada). Si a la carga general solo le
+quedan cupos de la cuota prioritaria, responde `409`.
 | POST | `/bookings/:id/cancel` | transportista, operador | `200` · turno cancelado |
 
 ### Franjas · `/slots`
 
 | Método | Ruta | Rol | Respuesta |
 |---|---|---|---|
-| GET | `/slots?fecha=AAAA-MM-DD` | autenticado | `200` · franjas del día con su ocupación |
+| GET | `/slots?fecha=AAAA-MM-DD` | autenticado | `200` · franjas del día con su ocupación, cuota prioritaria y `disponibles: { general, refrigerada }` |
 
 ### Muelles · `/docks`
 

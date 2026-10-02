@@ -40,4 +40,5 @@ conectados sobre el contrato `{ status, message, data }`.
 | RNF-02 Autenticación de doble factor | `modules/auth` · desafío MFA antes de emitir el JWT |
 | RNF-03 Reducción de la espera en vía | `modules/reportes` · serie `historial_espera` |
 | R-01 Operación en cabina sin manipular el teléfono | Vista `/conductor`: voz, botones de 96 px, avisos no silenciables |
-| R-02 Sistemas externos heterogéneos | Patrón Adapter: SOAP/XML en DIAN, REST/JSON en el operador |
+| R-02 Sistemas externos heterogéneos | Patrón Adapter: SOAP/XML en DIAN, REST/JSON en el operador y el ICA |
+| RF-17 Prioridad de carga perecedera (OCI-001) | `turnos/cupo-prioritario.ts`, `validacion/adaptadores/ica.adapter.ts`, migración `CargaRefrigeradaIca` |

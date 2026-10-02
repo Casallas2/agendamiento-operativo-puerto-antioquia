@@ -37,6 +37,7 @@ Ampliación de los requerimientos definidos en la Actividad 1 (Tablas 1, 2 y 3 d
 | RF-14 | Operación con conectividad limitada | La app del conductor debe permitir consultar el turno vigente y mostrar el código QR sin conexión, sincronizando los cambios al recuperar la señal. | Conductor | Derivado de R-03 | App móvil |
 | RF-15 | Alertas preventivas de vencimiento documental | El sistema debe alertar al transportista y al conductor sobre documentos próximos a vencer antes de que impidan la reserva de un turno. | Transportista, Conductor | Derivado de RF-02 | Servicio de Validación Documental / Notificaciones |
 | RF-16 | Historial de turnos | El sistema debe permitir consultar el historial de turnos por vehículo, conductor o transportista, con sus estados y tiempos de atención. | Transportista, Operador portuario | Derivado de RF-12 | Servicio de Gestión de Turnos |
+| RF-17 | Prioridad de carga perecedera | El sistema debe reservar en cada franja una cuota (30 % de la capacidad) para carga refrigerada de exportación, liberarla a la carga general 2 h antes si no se usa, exigir el certificado fitosanitario del ICA a esa carga y limitar a 30 min su desplazamiento ante retrasos de muelle. | Transportista, Operador portuario | OCI-001 (Parcial II) | Servicio de Gestión de Turnos / Validación Documental |
 
 ---
 
@@ -63,7 +64,7 @@ Ampliación de los requerimientos definidos en la Actividad 1 (Tablas 1, 2 y 3 d
 | ID | Tipo | Descripción | Origen |
 |---|---|---|---|
 | R-01 | Operativa | Interfaz accesible desde cabina del tractocamión: prioridad de comandos de voz y botones de alta visibilidad adaptados a condiciones de conducción. | Actividad 1 |
-| R-02 | Integración | Obligatoriedad de consumir APIs de sistemas legados de aduana (DIAN) y del operador portuario existente. | Actividad 1 |
+| R-02 | Integración | Obligatoriedad de consumir APIs de sistemas legados de aduana (DIAN) y del operador portuario existente. Desde la OCI-001 incluye el servicio de certificación fitosanitaria del ICA. | Actividad 1 · ampliada por OCI-001 |
 | R-03 | Entorno | Conectividad a Internet intermitente en zonas rurales del corredor vial de acceso a Turbo. | Introducción de la Actividad 1 (formalizada) |
 
 ---

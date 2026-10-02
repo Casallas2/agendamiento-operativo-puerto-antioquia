@@ -13,6 +13,7 @@ Es el núcleo del sistema: implementa RF-01, la reserva de ventanas de ingreso.
 | `turnos-consulta.service.ts` | Consultas: listar, detalle, visibilidad por rol |
 | `franjas.service.ts` / `franjas.controller.ts` | Agenda de un día (`/slots`) |
 | `franjas.helper.ts` | Toma y liberación de cupo en SQL |
+| `cupo-prioritario.ts` | Reglas de la cuota para carga refrigerada (OCI-001), con pruebas en `cupo-prioritario.spec.ts` |
 | `turnos.mapper.ts` | Entidad → respuesta JSON, con nombres relacionados resueltos |
 | `estados-turno.constants.ts` | Etiquetas y agrupaciones de estado |
 | `entities/` | `Turno`, `Franja`, `ValidacionTurno`, `EventoTurno` |
@@ -58,8 +59,8 @@ Dentro de una única transacción:
 3. Se comprueba que el vehículo y el conductor pertenezcan a la empresa que reserva → `403`.
 4. Se comprueba que el vehículo no tenga ya un turno vigente en esa franja → `409`.
 5. Se intenta tomar el cupo.
-6. Se pide el siguiente código a la secuencia y se crean el turno, sus cinco validaciones
-   pendientes y el primer evento del historial.
+6. Se pide el siguiente código a la secuencia y se crean el turno, sus validaciones
+   pendientes (cinco, o seis si la carga es refrigerada) y el primer evento del historial.
 
 Fuera de la transacción se publica `TurnoSolicitado` y se dispara la validación en segundo plano.
 
@@ -83,6 +84,24 @@ La liberación es simétrica y no puede bajar de cero:
 ```sql
 UPDATE franjas SET ocupados = GREATEST(ocupados - 1, 0) WHERE id = $1
 ```
+
+### Cuota prioritaria para carga refrigerada (OCI-001)
+
+Cada franja aparta `cupo_prioritario = FLOOR(capacidad × 0,3)` cupos para contenedores
+refrigerados y lleva aparte `ocupados_refrigerados`. Las reglas viven en `cupo-prioritario.ts`:
+
+| Tipo de carga | Puede tomar un cupo si… |
+|---|---|
+| Refrigerada | `ocupados < capacidad` (cualquier cupo libre; suma también a `ocupados_refrigerados`) |
+| General | `ocupados < capacidad` **y** `(ocupados − ocupados_refrigerados) < (capacidad − cupo_prioritario)`, salvo que la franja empiece en 2 h o menos |
+
+Igual que antes, la condición viaja dentro del `UPDATE`, así que la concurrencia la sigue
+arbitrando PostgreSQL. Si la carga general choca con la cuota, la respuesta `409` lo explica:
+«Los cupos que quedan en esta franja están reservados para carga refrigerada». `GET /slots`
+devuelve `disponibles: { general, refrigerada }` para que la interfaz no ofrezca lo que no se puede tomar.
+
+Ante un retraso de muelle, los turnos refrigerados se desplazan como máximo 30 minutos
+(`calcularRetrasoAplicable`): se atienden primero para no romper la cadena de frío.
 
 ### Códigos de turno
 
