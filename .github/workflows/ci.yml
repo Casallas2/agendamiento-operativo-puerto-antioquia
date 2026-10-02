@@ -1,0 +1,46 @@
+# Auditoría automática de cada cambio (P2, P6 y F2 de la lista de chequeo de GCS).
+# Corre en todo Pull Request hacia develop o main y en cada push a esas ramas.
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+
+jobs:
+  backend:
+    name: Backend · build y pruebas
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: Backend/yarn.lock
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - run: yarn test --passWithNoTests
+
+  frontend:
+    name: Frontend · lint y build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+          cache-dependency-path: Frontend/yarn.lock
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - run: yarn build
