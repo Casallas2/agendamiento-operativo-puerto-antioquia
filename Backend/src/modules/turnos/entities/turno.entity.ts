@@ -72,6 +72,14 @@ export class Turno {
   @Column({ type: 'varchar', length: 80, name: 'tipo_carga' })
   tipoCarga: string;
 
+  /** Carga perecedera en contenedor refrigerado: usa la cuota prioritaria de la franja (OCI-001) */
+  @Column({ type: 'boolean', default: false, name: 'carga_refrigerada' })
+  cargaRefrigerada: boolean;
+
+  /** Certificado fitosanitario de exportación del ICA; solo aplica a carga refrigerada */
+  @Column({ type: 'varchar', length: 40, name: 'numero_certificado_ica', nullable: true })
+  numeroCertificadoIca: string | null;
+
   @Index('IDX_TURNO_MANIFIESTO')
   @Column({ type: 'varchar', length: 40, name: 'numero_manifiesto' })
   numeroManifiesto: string;

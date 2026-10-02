@@ -45,7 +45,10 @@ export class ReportesService {
     ]);
 
     return construirRespuesta(200, 'Reporte generado', {
-      indicadores: this.calcularIndicadores(turnosVisibles, hoy, muellesConNovedad, historialEspera),
+      indicadores: {
+        ...this.calcularIndicadores(turnosVisibles, hoy, muellesConNovedad, historialEspera),
+        usoCuotaPrioritaria: this.calcularUsoCuota(franjasHoy),
+      },
       ocupacionPorFranja: this.agruparOcupacion(franjasHoy),
       rechazosPorMotivo: this.contarRechazos(turnosVisibles),
       historialEspera: historialEspera.map((punto) => ({
@@ -60,7 +63,7 @@ export class ReportesService {
     hoy: Date,
     muellesConNovedad: number,
     historialEspera: PuntoEspera[],
-  ): IndicadoresOperacion {
+  ): Omit<IndicadoresOperacion, 'usoCuotaPrioritaria'> {
     const turnosHoy = turnos.filter(
       (turno) => isSameDay(turno.inicio, hoy) && turno.estado !== 'CANCELADO',
     );
@@ -87,7 +90,18 @@ export class ReportesService {
       reduccionEsperaPorcentaje: primeraEspera
         ? Math.round(((primeraEspera - ultimaEspera) / primeraEspera) * 100)
         : 0,
+      turnosRefrigeradosHoy: turnosHoy.filter((turno) => turno.cargaRefrigerada).length,
     };
+  }
+
+  /** Qué parte de la cuota prioritaria de hoy ocupó la carga refrigerada (OCI-001) */
+  private calcularUsoCuota(franjas: Franja[]): number {
+    const cuotaTotal = franjas.reduce((suma, franja) => suma + franja.cupoPrioritario, 0);
+    const cuotaUsada = franjas.reduce(
+      (suma, franja) => suma + Math.min(franja.ocupadosRefrigerados, franja.cupoPrioritario),
+      0,
+    );
+    return cuotaTotal ? Math.round((cuotaUsada / cuotaTotal) * 100) : 0;
   }
 
   /** Suma la ocupación de todos los muelles hora por hora */

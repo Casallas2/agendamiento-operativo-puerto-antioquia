@@ -56,6 +56,8 @@ export const CrearTurnoView = () => {
       tipoCarga: 'Banano refrigerado',
       numeroManifiesto: '',
       numeroBl: '',
+      cargaRefrigerada: true,
+      numeroCertificadoIca: '',
       fecha: format(new Date(), 'yyyy-MM-dd'),
       franjaId: '',
       observaciones: '',
@@ -63,9 +65,9 @@ export const CrearTurnoView = () => {
     },
   });
   const { control, setValue, handleSubmit, formState } = formulario;
-  const [fecha, vehiculoId, conductorId, tipoCarga, franjaId] = useWatch({
+  const [fecha, vehiculoId, conductorId, tipoCarga, franjaId, cargaRefrigerada] = useWatch({
     control,
-    name: ['fecha', 'vehiculoId', 'conductorId', 'tipoCarga', 'franjaId'],
+    name: ['fecha', 'vehiculoId', 'conductorId', 'tipoCarga', 'franjaId', 'cargaRefrigerada'],
   });
 
   const cambiarFecha = (nuevaFecha: string) => {
@@ -88,6 +90,8 @@ export const CrearTurnoView = () => {
         tipoCarga: datos.tipoCarga,
         numeroManifiesto: datos.numeroManifiesto,
         numeroBl: datos.numeroBl,
+        cargaRefrigerada: datos.cargaRefrigerada,
+        numeroCertificadoIca: datos.cargaRefrigerada ? datos.numeroCertificadoIca : undefined,
         franjaId: datos.franjaId,
         observaciones: datos.observaciones,
       }),
@@ -109,7 +113,7 @@ export const CrearTurnoView = () => {
           <SeccionNumerada numero={1} titulo="Vehículo, conductor y carga" descripcion="Quién llega y qué transporta.">
             <SeccionVehiculoConductor vehiculos={vehiculos ?? []} conductores={conductores ?? []} />
           </SeccionNumerada>
-          <SeccionNumerada numero={2} titulo="Documentos de la carga" descripcion="Se verifican con la DIAN y el operador portuario.">
+          <SeccionNumerada numero={2} titulo="Documentos de la carga" descripcion="Se verifican con la DIAN, el operador portuario y, si la carga es refrigerada, el ICA.">
             <SeccionDocumentosCarga />
           </SeccionNumerada>
           <SeccionNumerada numero={3} titulo="Día y franja horaria" descripcion="Franjas de 2 horas. Las llenas o pasadas aparecen tachadas.">
@@ -117,6 +121,7 @@ export const CrearTurnoView = () => {
               fecha={fecha}
               franjaId={franjaId}
               tipoCarga={tipoCarga}
+              cargaRefrigerada={cargaRefrigerada}
               alCambiarFecha={cambiarFecha}
               alSeleccionarFranja={seleccionarFranja}
             />
@@ -131,6 +136,7 @@ export const CrearTurnoView = () => {
           placa={vehiculos?.find((vehiculo) => vehiculo.id === vehiculoId)?.placa}
           nombreConductor={conductores?.find((conductor) => conductor.id === conductorId)?.nombre}
           tipoCarga={tipoCarga}
+          cargaRefrigerada={cargaRefrigerada}
           franja={franjaSeleccionada}
           nombreMuelle={muelles.find((muelle) => muelle.id === franjaSeleccionada?.muelleId)?.nombre}
           estaEnviando={isPending}

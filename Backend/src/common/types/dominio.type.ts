@@ -24,7 +24,9 @@ export type TipoValidacion =
   | 'BL_OPERADOR'
   | 'LICENCIA_RUNT'
   | 'SOAT'
-  | 'TECNOMECANICA';
+  | 'TECNOMECANICA'
+  /** Solo para carga refrigerada de exportación (OCI-001) */
+  | 'CERTIFICADO_ICA';
 
 export type EstadoValidacion = 'PENDIENTE' | 'EN_PROCESO' | 'APROBADA' | 'RECHAZADA';
 
@@ -50,7 +52,7 @@ export type TipoEventoDominio =
   | 'MuelleRestablecido'
   | 'MuelleEnMantenimiento';
 
-export type SistemaExterno = 'DIAN' | 'OPERADOR_PORTUARIO';
+export type SistemaExterno = 'DIAN' | 'OPERADOR_PORTUARIO' | 'ICA';
 
 /** Lista de valores para las columnas `enum` de TypeORM y las migraciones */
 export const ROLES_USUARIO: RolUsuario[] = ['CONDUCTOR', 'TRANSPORTISTA', 'OPERADOR_PORTUARIO'];
@@ -60,10 +62,10 @@ export const ESTADOS_TURNO: EstadoTurno[] = [
 ];
 export const TIPOS_OPERACION: TipoOperacion[] = ['EXPORTACION', 'IMPORTACION'];
 export const TIPOS_VALIDACION: TipoValidacion[] = [
-  'MANIFIESTO_DIAN', 'BL_OPERADOR', 'LICENCIA_RUNT', 'SOAT', 'TECNOMECANICA',
+  'MANIFIESTO_DIAN', 'BL_OPERADOR', 'LICENCIA_RUNT', 'SOAT', 'TECNOMECANICA', 'CERTIFICADO_ICA',
 ];
 export const ESTADOS_VALIDACION: EstadoValidacion[] = ['PENDIENTE', 'EN_PROCESO', 'APROBADA', 'RECHAZADA'];
 export const ESTADOS_MUELLE: EstadoMuelle[] = ['OPERATIVO', 'RETRASADO', 'MANTENIMIENTO'];
 export const ESTADOS_RUNT: EstadoRunt[] = ['ACTIVO', 'SUSPENDIDO'];
 export const TIPOS_NOTIFICACION: TipoNotificacion[] = ['INFO', 'EXITO', 'ALERTA', 'ERROR'];
-export const SISTEMAS_EXTERNOS: SistemaExterno[] = ['DIAN', 'OPERADOR_PORTUARIO'];
+export const SISTEMAS_EXTERNOS: SistemaExterno[] = ['DIAN', 'OPERADOR_PORTUARIO', 'ICA'];

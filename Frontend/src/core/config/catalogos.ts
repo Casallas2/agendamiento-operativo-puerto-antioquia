@@ -58,6 +58,8 @@ interface DefinicionValidacion {
   tipo: TipoValidacion;
   etiqueta: string;
   fuente: string;
+  /** La validación solo se ejecuta para turnos de carga refrigerada */
+  soloCargaRefrigerada?: boolean;
 }
 
 /** Cada validación indica el sistema externo consultado a través de su adaptador (R-02) */
@@ -67,12 +69,24 @@ export const CATALOGO_VALIDACIONES: DefinicionValidacion[] = [
   { tipo: 'LICENCIA_RUNT', etiqueta: 'Licencia de conducción', fuente: 'RUNT · vía operador' },
   { tipo: 'SOAT', etiqueta: 'SOAT del vehículo', fuente: 'RUNT · vía operador' },
   { tipo: 'TECNOMECANICA', etiqueta: 'Revisión técnico-mecánica', fuente: 'RUNT · vía operador' },
+  {
+    tipo: 'CERTIFICADO_ICA',
+    etiqueta: 'Certificado fitosanitario',
+    fuente: 'ICA · REST',
+    soloCargaRefrigerada: true,
+  },
 ];
+
+/** Tipos de carga que viajan en contenedor refrigerado y activan la prioridad (OCI-001) */
+export const TIPOS_CARGA_REFRIGERADA = ['Banano refrigerado'];
 
 export const crearValidacionesIniciales = (
   estado: Validacion['estado'] = 'PENDIENTE',
+  cargaRefrigerada = false,
 ): Validacion[] =>
-  CATALOGO_VALIDACIONES.map((definicion) => ({
+  CATALOGO_VALIDACIONES.filter(
+    (definicion) => cargaRefrigerada || !definicion.soloCargaRefrigerada,
+  ).map((definicion) => ({
     ...definicion,
     estado,
     mensaje: estado === 'APROBADA' ? 'Documento verificado' : undefined,

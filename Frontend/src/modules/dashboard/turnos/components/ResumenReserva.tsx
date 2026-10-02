@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { InsigniaCargaRefrigerada } from '@/components/shared/InsigniaEstado';
 import { formatearDiaRelativo, formatearVentana } from '@/lib/formatos';
 import type { CrearTurnoFormulario } from '@/lib/validators';
 import type { Franja } from '../types/turnos.types';
@@ -15,6 +16,7 @@ interface ResumenReservaProps {
   placa?: string;
   nombreConductor?: string;
   tipoCarga?: string;
+  cargaRefrigerada: boolean;
   franja?: Franja;
   nombreMuelle?: string;
   estaEnviando: boolean;
@@ -28,7 +30,15 @@ const FilaResumen = ({ etiqueta, valor }: { etiqueta: string; valor?: string }) 
 );
 
 /** Resumen siempre visible: el usuario no tiene que recordar lo que eligió arriba */
-export const ResumenReserva = ({ placa, nombreConductor, tipoCarga, franja, nombreMuelle, estaEnviando }: ResumenReservaProps) => {
+export const ResumenReserva = ({
+  placa,
+  nombreConductor,
+  tipoCarga,
+  cargaRefrigerada,
+  franja,
+  nombreMuelle,
+  estaEnviando,
+}: ResumenReservaProps) => {
   const {
     control,
     formState: { errors },
@@ -44,6 +54,11 @@ export const ResumenReserva = ({ placa, nombreConductor, tipoCarga, franja, nomb
         <FilaResumen etiqueta="Vehículo" valor={placa} />
         <FilaResumen etiqueta="Conductor" valor={nombreConductor} />
         <FilaResumen etiqueta="Carga" valor={tipoCarga} />
+        {cargaRefrigerada && (
+          <div className="flex justify-end">
+            <InsigniaCargaRefrigerada />
+          </div>
+        )}
         <Separator />
         <FilaResumen etiqueta="Día" valor={franja ? formatearDiaRelativo(franja.inicio) : undefined} />
         <FilaResumen etiqueta="Ventana" valor={franja ? formatearVentana(franja.inicio, franja.fin) : undefined} />
@@ -63,7 +78,7 @@ export const ResumenReserva = ({ placa, nombreConductor, tipoCarga, franja, nomb
                   aria-invalid={Boolean(errors.aceptaDeclaracion)}
                   className="mt-0.5"
                 />
-                Declaro que los datos son verídicos y autorizo su consulta ante la DIAN, el RUNT y el operador portuario.
+                Declaro que los datos son verídicos y autorizo su consulta ante la DIAN, el RUNT, el operador portuario y el ICA.
               </Label>
             )}
           />

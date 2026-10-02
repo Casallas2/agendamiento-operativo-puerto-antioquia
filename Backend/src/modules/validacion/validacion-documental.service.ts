@@ -7,12 +7,13 @@ import { EventoTurno, Turno, ValidacionTurno } from 'src/modules/turnos/entities
 import { liberarCupo } from 'src/modules/turnos/franjas.helper';
 import { UsersService } from 'src/modules/users/users.service';
 import { AdaptadorDian } from './adaptadores/dian.adapter';
+import { AdaptadorIca } from './adaptadores/ica.adapter';
 import { AdaptadorOperadorPortuario } from './adaptadores/operador-portuario.adapter';
 import type { ResultadoValidacion } from './types';
 
 /**
- * ServicioValidacionDocumental: consume el evento TurnoSolicitado y ejecuta las cinco
- * validaciones en paralelo contra los adaptadores (RF-02). El transportista no queda
+ * ServicioValidacionDocumental: consume el evento TurnoSolicitado y ejecuta las validaciones
+ * en paralelo (cinco, o seis si la carga es refrigerada y exige el certificado del ICA) contra los adaptadores (RF-02). El transportista no queda
  * bloqueado: el POST ya respondió 202 y el resultado llega después por el bus de eventos.
  */
 @Injectable()
@@ -29,6 +30,7 @@ export class ValidacionDocumentalService {
     private readonly dataSource: DataSource,
     private readonly adaptadorDian: AdaptadorDian,
     private readonly adaptadorOperador: AdaptadorOperadorPortuario,
+    private readonly adaptadorIca: AdaptadorIca,
     private readonly busEventos: BusEventosService,
     private readonly usersService: UsersService,
   ) {}
@@ -60,9 +62,10 @@ export class ValidacionDocumentalService {
       const documentoCarga = {
         numeroManifiesto: turno.numeroManifiesto,
         numeroBl: turno.numeroBl,
+        numeroCertificadoIca: turno.numeroCertificadoIca ?? undefined,
       };
 
-      const resultados = await Promise.all([
+      const consultas = [
         this.adaptadorDian
           .validarDocumentoCarga(documentoCarga)
           .then((resultado) => this.registrarResultado(turnoId, 'MANIFIESTO_DIAN', resultado)),
@@ -78,7 +81,16 @@ export class ValidacionDocumentalService {
         this.adaptadorOperador
           .validarVehiculo(turno.vehiculo, 'TECNOMECANICA', turno.inicio)
           .then((resultado) => this.registrarResultado(turnoId, 'TECNOMECANICA', resultado)),
-      ]);
+      ];
+      // OCI-001: la carga refrigerada de exportación necesita además el certificado fitosanitario
+      if (turno.cargaRefrigerada) {
+        consultas.push(
+          this.adaptadorIca
+            .validarDocumentoCarga(documentoCarga)
+            .then((resultado) => this.registrarResultado(turnoId, 'CERTIFICADO_ICA', resultado)),
+        );
+      }
+      const resultados = await Promise.all(consultas);
 
       await this.cerrarValidacion(turno, resultados);
     } finally {
@@ -127,7 +139,7 @@ export class ValidacionDocumentalService {
         turnoGuardado.estado = 'RECHAZADO';
         turnoGuardado.motivoRechazo = primerRechazo.mensaje;
         // El cupo se libera para que otro transportista pueda tomarlo
-        await liberarCupo(gestor, turnoGuardado.franjaId);
+        await liberarCupo(gestor, turnoGuardado.franjaId, turnoGuardado.cargaRefrigerada);
       } else {
         turnoGuardado.estado = 'CONFIRMADO';
       }

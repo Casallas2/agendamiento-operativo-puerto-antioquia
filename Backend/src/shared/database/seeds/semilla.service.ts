@@ -10,9 +10,9 @@ import { PuntoEspera } from 'src/modules/reportes/entities';
 import { EventoTurno, Franja, Turno, ValidacionTurno } from 'src/modules/turnos/entities';
 import { Usuario } from 'src/modules/users/entities';
 import { RegistroExterno } from 'src/modules/validacion/entities';
-import { CATALOGO_VALIDACIONES } from 'src/modules/validacion/catalogo-validaciones';
+import { validacionesAplicables } from 'src/modules/validacion/catalogo-validaciones';
 import {
-  BL_OPERADOR, CONDUCTORES, construirHistorialEspera, EMPRESAS, enDias,
+  BL_OPERADOR, CERTIFICADOS_ICA, CONDUCTORES, construirHistorialEspera, EMPRESAS, enDias,
   MANIFIESTOS_DIAN, MUELLES, USUARIOS, VEHICULOS,
 } from './datos-maestros';
 import { generarFranjas, generarTurnos, SIGUIENTE_CODIGO_TURNO, type TurnoSemilla } from './generador-agenda';
@@ -104,6 +104,7 @@ export class SemillaService {
       ...BL_OPERADOR.map((numero) =>
         gestor.create(RegistroExterno, { sistema: 'OPERADOR_PORTUARIO' as const, numero }),
       ),
+      ...CERTIFICADOS_ICA.map((numero) => gestor.create(RegistroExterno, { sistema: 'ICA' as const, numero })),
     ]);
 
     await gestor.save(
@@ -125,7 +126,7 @@ export class SemillaService {
   }
 
   /**
-   * Cada turno de ejemplo llega con sus cinco validaciones resueltas y su historial.
+   * Cada turno de ejemplo llega con sus validaciones resueltas y su historial.
    * Devuelve el mapa código → id para que las notificaciones puedan enlazar con su turno.
    */
   private async sembrarTurnos(
@@ -151,6 +152,8 @@ export class SemillaService {
           tipoCarga: semilla.tipoCarga,
           numeroManifiesto: semilla.numeroManifiesto,
           numeroBl: semilla.numeroBl,
+          cargaRefrigerada: semilla.cargaRefrigerada,
+          numeroCertificadoIca: semilla.numeroCertificadoIca ?? null,
           estado: semilla.estado,
           retrasoMinutos: 0,
           motivoRechazo: semilla.motivoRechazo ?? null,
@@ -160,7 +163,7 @@ export class SemillaService {
 
       await gestor.save(
         ValidacionTurno,
-        CATALOGO_VALIDACIONES.map((definicion, orden) => {
+        validacionesAplicables(turno.cargaRefrigerada).map((definicion, orden) => {
           const rechazaEsta = esRechazado && definicion.tipo === 'MANIFIESTO_DIAN';
           return gestor.create(ValidacionTurno, {
             turnoId: turno.id,

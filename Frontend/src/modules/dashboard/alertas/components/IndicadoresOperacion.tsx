@@ -1,4 +1,4 @@
-import { CalendarCheck, Clock, FileX2, Ship, Truck } from 'lucide-react';
+import { CalendarCheck, Clock, FileX2, Ship, Snowflake, Truck } from 'lucide-react';
 import { TarjetaIndicador } from '@/components/shared/TarjetaIndicador';
 import type { IndicadoresOperacion as Indicadores } from '../types/alertas.types';
 
@@ -9,7 +9,7 @@ interface IndicadoresOperacionProps {
 }
 
 export const IndicadoresOperacion = ({ indicadores, cargando, esOperador }: IndicadoresOperacionProps) => (
-  <div className="animar-lista grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+  <div className="animar-lista grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
     <TarjetaIndicador
       titulo="Turnos de hoy"
       valor={indicadores?.turnosHoy ?? 0}
@@ -45,6 +45,13 @@ export const IndicadoresOperacion = ({ indicadores, cargando, esOperador }: Indi
         tonoDetalle={(indicadores?.tasaRechazoDocumental ?? 0) > 20 ? 'negativo' : 'neutro'}
       />
     )}
+    <TarjetaIndicador
+      titulo="Carga refrigerada hoy"
+      valor={indicadores?.turnosRefrigeradosHoy ?? 0}
+      detalle={`${indicadores?.usoCuotaPrioritaria ?? 0}% de la cuota prioritaria en uso`}
+      Icono={Snowflake}
+      cargando={cargando}
+    />
     <TarjetaIndicador
       titulo="Espera promedio en vía"
       valor={`${indicadores?.esperaPromedioMinutos ?? 0} min`}

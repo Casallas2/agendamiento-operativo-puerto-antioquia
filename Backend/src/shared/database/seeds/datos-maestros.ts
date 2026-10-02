@@ -105,6 +105,14 @@ export const BL_OPERADOR = [
   'BL-PA-88260', 'BL-PA-88275', 'BL-PA-88288', 'BL-PA-88301',
 ];
 
+/**
+ * Certificados fitosanitarios que el ICA reconoce como expedidos (OCI-001).
+ * Para demostrar un rechazo basta usar uno que no esté aquí, como CFE-2026-009999.
+ */
+export const CERTIFICADOS_ICA = [
+  'CFE-2026-001190', 'CFE-2026-001204', 'CFE-2026-001215', 'CFE-2026-001230', 'CFE-2026-001247',
+];
+
 /** Serie de espera en vía de los últimos 10 días: muestra la reducción lograda (RNF-03) */
 const MINUTOS_ESPERA = [312, 295, 280, 240, 198, 170, 142, 120, 96, 84];
 

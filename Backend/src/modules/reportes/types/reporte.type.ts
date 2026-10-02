@@ -10,6 +10,10 @@ export type IndicadoresOperacion = {
   muellesConNovedad: number;
   esperaPromedioMinutos: number;
   reduccionEsperaPorcentaje: number;
+  /** OCI-001: turnos de carga refrigerada programados para hoy */
+  turnosRefrigeradosHoy: number;
+  /** OCI-001: porcentaje de la cuota prioritaria de hoy que ya usó la carga refrigerada */
+  usoCuotaPrioritaria: number;
 };
 
 export type OcupacionFranja = {

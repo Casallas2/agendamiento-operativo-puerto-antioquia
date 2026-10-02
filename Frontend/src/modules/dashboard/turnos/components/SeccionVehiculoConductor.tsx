@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CampoFormulario } from '@/components/shared/CampoFormulario';
 import { SelectorOpciones } from '@/components/shared/SelectorOpciones';
-import { ETIQUETAS_OPERACION, TIPOS_CARGA } from '@/core/config/catalogos';
+import { ETIQUETAS_OPERACION, TIPOS_CARGA, TIPOS_CARGA_REFRIGERADA } from '@/core/config/catalogos';
 import type { CrearTurnoFormulario } from '@/lib/validators';
 import { cn } from '@/lib/utils';
 import { evaluarDocumentosConductor, evaluarDocumentosVehiculo } from '@/modules/dashboard/flota/services/flota.service';
@@ -31,8 +31,15 @@ const ICONO_OPERACION: Record<TipoOperacion, typeof Ship> = {
 export const SeccionVehiculoConductor = ({ vehiculos, conductores }: SeccionVehiculoConductorProps) => {
   const {
     control,
+    setValue,
     formState: { errors },
   } = useFormContext<CrearTurnoFormulario>();
+
+  // OCI-001: elegir una carga refrigerada activa la prioridad y pide el certificado del ICA
+  const cambiarTipoCarga = (tipoCarga: string) => {
+    setValue('tipoCarga', tipoCarga, { shouldValidate: true });
+    setValue('cargaRefrigerada', TIPOS_CARGA_REFRIGERADA.includes(tipoCarga));
+  };
   const [vehiculoId, conductorId] = useWatch({ control, name: ['vehiculoId', 'conductorId'] });
 
   const opcionesVehiculo = vehiculos.map((vehiculo) => {
@@ -76,7 +83,7 @@ export const SeccionVehiculoConductor = ({ vehiculos, conductores }: SeccionVehi
               opciones={opcionesVehiculo}
               textoVacio="Selecciona la placa"
               invalido={Boolean(errors.vehiculoId)}
-              alCambiar={field.onChange}
+              alCambiar={cambiarTipoCarga}
               alSalir={field.onBlur}
             />
           )}

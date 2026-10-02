@@ -10,4 +10,14 @@ export const CATALOGO_VALIDACIONES: DefinicionValidacion[] = [
   { tipo: 'LICENCIA_RUNT', etiqueta: 'Licencia de conducción', fuente: 'RUNT · vía operador' },
   { tipo: 'SOAT', etiqueta: 'SOAT del vehículo', fuente: 'RUNT · vía operador' },
   { tipo: 'TECNOMECANICA', etiqueta: 'Revisión técnico-mecánica', fuente: 'RUNT · vía operador' },
+  {
+    tipo: 'CERTIFICADO_ICA',
+    etiqueta: 'Certificado fitosanitario',
+    fuente: 'ICA · REST',
+    soloCargaRefrigerada: true,
+  },
 ];
+
+/** Validaciones que corresponden a un turno: el certificado ICA solo aplica a carga refrigerada */
+export const validacionesAplicables = (cargaRefrigerada: boolean): DefinicionValidacion[] =>
+  CATALOGO_VALIDACIONES.filter((definicion) => cargaRefrigerada || !definicion.soloCargaRefrigerada);

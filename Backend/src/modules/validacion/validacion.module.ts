@@ -5,6 +5,7 @@ import { Conductor, Vehiculo } from 'src/modules/flota/entities';
 import { EventoTurno, Franja, Turno, ValidacionTurno } from 'src/modules/turnos/entities';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AdaptadorDian } from './adaptadores/dian.adapter';
+import { AdaptadorIca } from './adaptadores/ica.adapter';
 import { AdaptadorOperadorPortuario } from './adaptadores/operador-portuario.adapter';
 import { RegistroExterno } from './entities';
 import { ValidacionDocumentalService } from './validacion-documental.service';
@@ -17,7 +18,7 @@ import { ValidacionDocumentalService } from './validacion-documental.service';
     EventosModule,
     UsersModule,
   ],
-  providers: [AdaptadorDian, AdaptadorOperadorPortuario, ValidacionDocumentalService],
+  providers: [AdaptadorDian, AdaptadorOperadorPortuario, AdaptadorIca, ValidacionDocumentalService],
   exports: [ValidacionDocumentalService],
 })
 export class ValidacionModule {}

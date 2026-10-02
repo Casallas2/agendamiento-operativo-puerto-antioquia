@@ -45,6 +45,8 @@ export class TurnosController {
             tipoCarga: 'Refrigerated banana',
             numeroManifiesto: 'MAN-2026-004512',
             numeroBl: 'BL-PA-88213',
+            cargaRefrigerada: true,
+            numeroCertificadoIca: 'CFE-2026-001204',
             retrasoMinutos: 0,
             placa: 'TTK-482',
             nombreConductor: 'Carlos Mena',
@@ -90,14 +92,28 @@ export class TurnosController {
     type: CrearTurnoDto,
     examples: {
       exportacion: {
-        summary: 'Exportación de banano',
+        summary: 'Exportación de banano refrigerado (cuota prioritaria + ICA)',
         value: {
           vehiculoId: 'uuid-here',
           conductorId: 'uuid-here',
           tipoOperacion: 'EXPORTACION',
           tipoCarga: 'Refrigerated banana',
+          cargaRefrigerada: true,
+          numeroCertificadoIca: 'CFE-2026-001204',
           numeroManifiesto: 'MAN-2026-004512',
           numeroBl: 'BL-PA-88213',
+          franjaId: 'uuid-here',
+        },
+      },
+      cargaGeneral: {
+        summary: 'Carga general (no puede usar la cuota prioritaria)',
+        value: {
+          vehiculoId: 'uuid-here',
+          conductorId: 'uuid-here',
+          tipoOperacion: 'EXPORTACION',
+          tipoCarga: 'General cargo',
+          numeroManifiesto: 'MAN-2026-004530',
+          numeroBl: 'BL-PA-88240',
           franjaId: 'uuid-here',
         },
       },
@@ -106,7 +122,7 @@ export class TurnosController {
   @ApiResponse({ status: 202, description: 'Solicitud de turno recibida' })
   @ApiResponse({ status: 403, description: 'Solo los transportistas pueden reservar turnos' })
   @ApiResponse({ status: 404, description: 'La franja seleccionada ya no existe' })
-  @ApiResponse({ status: 409, description: 'La franja se llenó, el muelle está en mantenimiento o el vehículo ya tiene turno' })
+  @ApiResponse({ status: 409, description: 'La franja se llenó, solo quedan cupos de la cuota refrigerada, el muelle está en mantenimiento o el vehículo ya tiene turno' })
   async crearTurno(
     @UsuarioActual() usuario: UsuarioSesion,
     @Body() payload: CrearTurnoDto,

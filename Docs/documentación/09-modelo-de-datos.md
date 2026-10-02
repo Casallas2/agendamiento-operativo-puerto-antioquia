@@ -66,6 +66,10 @@ CONSTRAINT "CHK_FRANJA_OCUPADOS" CHECK (ocupados >= 0 AND ocupados <= capacidad)
 Esa restricción es la última defensa de la integridad del cupo, por debajo de la condición que
 viaja en el `UPDATE` (documento 04).
 
+Desde la OCI-001 (migración `CargaRefrigeradaIca`) añade `cupo_prioritario` y
+`ocupados_refrigerados`, con `CHK_FRANJA_CUPO_PRIORITARIO` (0 ≤ cupo ≤ capacidad) y
+`CHK_FRANJA_OCUPADOS_REFRIGERADOS` (0 ≤ refrigerados ≤ ocupados).
+
 ### `turnos`
 La entidad central. `codigo` único (`TRN-1007`), FK a empresa, vehículo, conductor, muelle y
 franja.
@@ -76,6 +80,9 @@ prometió al transportista.
 
 Las FK a vehículo, conductor, muelle y franja usan `ON DELETE RESTRICT`: no se puede borrar un
 recurso con historial de turnos.
+
+OCI-001: `carga_refrigerada` (boolean, por defecto `false`, con índice parcial) y
+`numero_certificado_ica` (nulo salvo en carga refrigerada).
 
 ### `turno_validaciones`
 Una fila por validación. Índice único `(turno_id, tipo)`: un turno no puede tener dos
@@ -92,7 +99,7 @@ turno no arrastre el aviso que informó de su cancelación.
 Desafío pendiente con `intentos` y `expira_en`. Los caducados se limpian en cada verificación.
 
 ### `registros_externos`
-Espejo de lo que conocen la DIAN y el operador portuario. Único por `(sistema, numero)`.
+Espejo de lo que conocen la DIAN, el operador portuario y, desde la OCI-001, el ICA. Único por `(sistema, numero)`.
 
 ### `historial_espera`
 Serie diaria de espera en vía. `fecha` es `date` y única.

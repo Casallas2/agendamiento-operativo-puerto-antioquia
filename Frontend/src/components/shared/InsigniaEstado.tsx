@@ -5,6 +5,7 @@ import {
   CircleDot,
   Clock,
   Loader2,
+  Snowflake,
   Truck,
   Wrench,
   XCircle,
@@ -98,3 +99,8 @@ export const InsigniaSemaforo = ({ semaforo, texto }: { semaforo: 'VIGENTE' | 'P
   }[semaforo];
   return <InsigniaBase etiqueta={texto} {...configuracion} />;
 };
+
+/** Turno de carga refrigerada con prioridad por cadena de frío (OCI-001) */
+export const InsigniaCargaRefrigerada = ({ tamano }: { tamano?: 'normal' | 'grande' }) => (
+  <InsigniaBase etiqueta="Refrigerada · prioridad" tono="info" Icono={Snowflake} tamano={tamano} />
+);

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { EnlaceBoton } from '@/components/shared/EnlaceBoton';
 import { EstadoVacio } from '@/components/shared/EstadoVacio';
-import { InsigniaEstadoTurno } from '@/components/shared/InsigniaEstado';
+import { InsigniaCargaRefrigerada, InsigniaEstadoTurno } from '@/components/shared/InsigniaEstado';
 import { ETIQUETAS_OPERACION } from '@/core/config/catalogos';
 import { useAuthStore } from '@/core/store/authStore';
 import { formatearDiaRelativo, formatearVentana } from '@/lib/formatos';
@@ -57,6 +57,7 @@ export const DetalleTurnoView = ({ turnoId }: { turnoId: string }) => {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="font-mono text-2xl font-semibold">{turno.codigo}</h1>
             <InsigniaEstadoTurno estado={turno.estado} tamano="grande" />
+            {turno.cargaRefrigerada && <InsigniaCargaRefrigerada tamano="grande" />}
           </div>
           <p className="text-muted-foreground">
             {formatearDiaRelativo(turno.inicio)} · {formatearVentana(turno.inicio, turno.fin, turno.retrasoMinutos)} · {turno.nombreMuelle}
@@ -89,7 +90,10 @@ export const DetalleTurnoView = ({ turnoId }: { turnoId: string }) => {
         <Alert className="border-warning/50 bg-warning/10">
           <AlertTriangle className="text-amber-600" aria-hidden />
           <AlertTitle>Ventana desplazada {turno.retrasoMinutos} minutos</AlertTitle>
-          <AlertDescription>El muelle reportó un retraso. La nueva ventana ya se refleja arriba.</AlertDescription>
+          <AlertDescription>
+            El muelle reportó un retraso. La nueva ventana ya se refleja arriba.
+            {turno.cargaRefrigerada && ' Tu carga refrigerada tiene prioridad: el desplazamiento no supera 30 minutos.'}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -110,6 +114,9 @@ export const DetalleTurnoView = ({ turnoId }: { turnoId: string }) => {
                 <DatoTurno etiqueta="Muelle" valor={turno.nombreMuelle} />
                 <DatoTurno etiqueta="Manifiesto" valor={turno.numeroManifiesto} esCodigo />
                 <DatoTurno etiqueta="BL" valor={turno.numeroBl} esCodigo />
+                {turno.numeroCertificadoIca && (
+                  <DatoTurno etiqueta="Certificado ICA" valor={turno.numeroCertificadoIca} esCodigo />
+                )}
                 {turno.observaciones && (
                   <div className="col-span-full">
                     <DatoTurno etiqueta="Observaciones para el operador" valor={turno.observaciones} />
